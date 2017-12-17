@@ -20,11 +20,17 @@ void cleanup() {
  */
 void fill_audio(void *udata, uint8_t *stream, int length)
 {
+    if (length < 0) {
+        fprintf(stderr, "fill_audio: ??? length < 0\r\n");
+        keep_running = false;
+        return;
+    }
+
     uint32_t ulength = (uint32_t)length; // FUCKING BITE ME, SDL.
     uint8_t *buffer = malloc(ulength);
     memset(buffer, 0, ulength);
 
-    SDL_MixAudio(stream, buffer, length, SDL_MIX_MAXVOLUME / 2);
+    SDL_MixAudio(stream, buffer, ulength, SDL_MIX_MAXVOLUME / 2);
 
     free(buffer);
 }
