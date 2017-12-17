@@ -1,4 +1,5 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -19,8 +20,9 @@ void cleanup() {
  */
 void fill_audio(void *udata, uint8_t *stream, int length)
 {
-    uint8_t *buffer = malloc(length);
-    memset(buffer, 0, length);
+    uint32_t ulength = (uint32_t)length; // FUCKING BITE ME, SDL.
+    uint8_t *buffer = malloc(ulength);
+    memset(buffer, 0, ulength);
 
     SDL_MixAudio(stream, buffer, length, SDL_MIX_MAXVOLUME / 2);
 
