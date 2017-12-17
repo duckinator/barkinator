@@ -6,6 +6,15 @@
 
 #define FAIL(...) error(1, 0, __VA_ARGS__);
 
+/* ==== START CONFIGURATION ==== */
+
+static size_t sample_rate   = 96000; // Sample rate we want the device to accept.
+static size_t channels      = 2;     // 1 = mono, 2 = stereo.
+static size_t samples       = 2048;  // Samples per function call, I think?
+
+/* ==== END   CONFIGURATION ==== */
+
+
 SDL_AudioSpec wanted;
 bool keep_running = true;
 
@@ -21,13 +30,31 @@ void cleanup()
 
 long i = 0;
 
+// TODO: Verify this actually generates a sawtooth wave.
+uint8_t sawtooth(size_t frequency, uint32_t idx) {
+    size_t period_samples = sample_rate / frequency;
+    return (idx % period_samples) / 2;
+}
+
+uint8_t square(size_t frequency, uint32_t idx) {
+    size_t period_samples = sample_rate / frequency;
+    size_t half_period_samples = period_samples / 2;
+
+    if ((idx % period_samples) > half_period_samples) {
+        return 255;
+    } else {
+        return 0;
+    }
+}
+
 int one() {
-    return louder(i * (i >> 12 | i >> 3) & 30 & (i >> 4));
+    return louder(sawtooth(30, (i >> 12 | i >> 3) & (i >> 4)));
 }
 
 int two() {
-  return (i * (i >> 50 | i >> 3));
+    return louder(square(60, (i >> 10 | i >> 3) & (i << 2)));
 }
+
 
 #define foreach(fn, ary, n, ...)                            \
     for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
@@ -90,10 +117,11 @@ void fill_audio(void *udata, uint8_t *stream, int length)
 void open_audio_device()
 {
     // Specify wanted audio format.
-    wanted.freq = 96000;    // Sample rate. I think?
-    wanted.format = AUDIO_U8;
-    wanted.channels = 2;    // 1 = mono, 2 = stereo.
-    wanted.samples = 2048;  // Samples per function call. I think?
+    // See configuration section at the top for details.
+    wanted.freq     = sample_rate;
+    wanted.format   = AUDIO_U8;
+    wanted.channels = channels;
+    wanted.samples  = samples;
     wanted.callback = fill_audio;
     wanted.userdata = NULL;
 
