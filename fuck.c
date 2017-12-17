@@ -15,15 +15,52 @@ void cleanup()
     SDL_CloseAudio();
 }
 
-static uint16_t x = 0;
-void generate_chunk(uint16_t *buffer, uint32_t length)
+
+#define quieter(x) ( ((x) & 0xFF) >> 2)
+#define louder(x)  (  (x) << 2 )
+
+long i = 0;
+
+int one() {
+    return louder(i * (i >> 12 | i >> 3) & 30 & (i >> 4));
+}
+
+int two() {
+  return (i * (i >> 30 | i >> 5));
+}
+
+int three() {
+  return (i * (i >> 10 | i >> 3));
+}
+
+#define foreach(fn, ary, n, ...)                            \
+    printf("foreach(" #fn ", " #ary ", " #n ", ...)\r\n");      \
+    for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
+        printf("    %i\r\n", __fe_idx);\
+        fn(ary[__fe_idx], ##__VA_ARGS__);\
+    }
+
+#define NUM_SOUNDS 3
+int (*sounds[NUM_SOUNDS])() = {
+    one,
+    two,
+    three
+};
+
+void run_generator(int (*fn)(), int *ibuffer, uint32_t idx) {
+    ibuffer[idx] = fn();
+    i++;
+}
+
+void generate_chunk(uint8_t *buffer, uint32_t length)
 {
-    for (uint32_t i = 0 ; i < length; i++) {
-//        if (x > 300) {
-//            x = 0;
-//        }
-        x++;
-        buffer[i] = x;
+    memset(buffer, 0, length);
+    int *ibuffer = (int*)buffer;
+    uint32_t ilength = (length * sizeof(uint8_t)) / sizeof(int);
+
+    for (uint32_t idx = 0; idx < ilength; idx++) {
+//        foreach(run_generator, sounds, NUM_SOUNDS, ibuffer, idx);
+        run_generator(one, ibuffer, idx);
     }
 }
 
@@ -48,22 +85,23 @@ void fill_audio(void *udata, uint8_t *stream, int length)
         FAIL("buffer is NULL");
     }
 
-    generate_chunk((uint16_t*)buffer, ulength);
+    generate_chunk(buffer, ulength);
 
     SDL_MixAudio(stream, buffer, ulength, SDL_MIX_MAXVOLUME / 2);
 
     // Why the fuck does this cause a memory access error?!
     //free(original_buffer);
+    SDL_Delay(10);
 }
 
 // Acquire access to an audio device.
 void open_audio_device()
 {
     // Specify wanted audio format.
-    wanted.freq = 22050;
-    wanted.format = AUDIO_U16;
+    wanted.freq = 48000;    // Sample rate. I think?
+    wanted.format = AUDIO_U8;
     wanted.channels = 1;    // 1 = mono, 2 = stereo.
-    wanted.samples = 1024;  // According to the internet: "Good low-latency value for callback."
+    wanted.samples = 512;   // Samples per function call. I think?
     wanted.callback = fill_audio;
     wanted.userdata = NULL;
 
@@ -78,11 +116,13 @@ int main(int argc, char *argv[])
     // Always run cleanup() before exiting.
     atexit(cleanup);
 
+    // Initialize audio device.
     open_audio_device();
 
-    /* Let the callback function play the audio chunk */
+    // Play audio.
     SDL_PauseAudio(0);
 
+    // Busy loop until we want to exit.
     while (keep_running) {
         SDL_Delay(100); // Sleep 1/10th of a second.
     }
