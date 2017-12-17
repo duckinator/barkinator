@@ -2,13 +2,22 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <error.h>
+
+#define FAIL(...) error(1, 0, __VA_ARGS__);
 
 SDL_AudioSpec wanted;
 bool keep_running = true;
 
-void cleanup() {
+void cleanup()
+{
     keep_running = false;
     SDL_CloseAudio();
+}
+
+uint32_t generate_chunk(uint32_t length)
+{
+    return 0;
 }
 
 /*
@@ -21,8 +30,7 @@ void cleanup() {
 void fill_audio(void *udata, uint8_t *stream, int length)
 {
     if (length < 0) {
-        fprintf(stderr, "fill_audio: ??? length < 0\r\n");
-        keep_running = false;
+        FAIL("fill_audio: ??? length < 0");
         return;
     }
 
@@ -36,7 +44,7 @@ void fill_audio(void *udata, uint8_t *stream, int length)
 }
 
 // Acquire access to an audio device.
-bool open_audio_device()
+void open_audio_device()
 {
     // Specify wanted audio format.
     wanted.freq = 22050;
@@ -48,11 +56,8 @@ bool open_audio_device()
 
     // Open the audio device, forcing the desired format.
     if (SDL_OpenAudio(&wanted, NULL) < 0) {
-        fprintf(stderr, "Couldn't open audio device: %s\n", SDL_GetError());
-        return false;
+        FAIL("Couldn't open audio device: %s", SDL_GetError());
     }
-
-    return true;
 }
 
 int main(int argc, char *argv[])
@@ -60,9 +65,7 @@ int main(int argc, char *argv[])
     // Always run cleanup() before exiting.
     atexit(cleanup);
 
-    if (!open_audio_device()) {
-        return 1;
-    }
+    open_audio_device();
 
     /* Let the callback function play the audio chunk */
     SDL_PauseAudio(0);
