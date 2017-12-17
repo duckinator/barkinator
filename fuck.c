@@ -35,7 +35,7 @@ int three() {
 
 #define foreach(fn, ary, n, ...)                            \
     for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
-        fn(ary[__fe_idx], __fe_idx, ##__VA_ARGS__);         \
+        fn(ary[__fe_idx], ##__VA_ARGS__);         \
     }
 
 #define NUM_SOUNDS 3
@@ -45,15 +45,9 @@ int (*sounds[NUM_SOUNDS])() = {
     three
 };
 
-size_t run_generator(int (*fn)(), size_t fe_idx, int *ibuffer, uint32_t ilength, uint32_t idx) {
-    uint32_t current = idx + fe_idx;
-    if (current > ilength) {
-        current -= ilength;
-    }
-
-    ibuffer[current] = fn();
+void run_generator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
+    ibuffer[idx] = fn();
     i++;
-    return fe_idx;
 }
 
 void generate_chunk(uint8_t *buffer, uint32_t length)
@@ -62,8 +56,8 @@ void generate_chunk(uint8_t *buffer, uint32_t length)
     int *ibuffer = (int*)buffer;
     uint32_t ilength = (length * sizeof(uint8_t)) / sizeof(int);
 
-    for (uint32_t idx = 0; idx < ilength; idx++) {
-        foreach(run_generator, sounds, NUM_SOUNDS, ibuffer, ilength, idx);
+    for (uint32_t idx = 0; idx < ilength; idx) {
+        foreach(run_generator, sounds, NUM_SOUNDS, ibuffer, ilength, idx++);
     }
 }
 
@@ -101,10 +95,10 @@ void fill_audio(void *udata, uint8_t *stream, int length)
 void open_audio_device()
 {
     // Specify wanted audio format.
-    wanted.freq = 48000;    // Sample rate. I think?
+    wanted.freq = 96000;    // Sample rate. I think?
     wanted.format = AUDIO_U8;
-    wanted.channels = 1;    // 1 = mono, 2 = stereo.
-    wanted.samples = 512;   // Samples per function call. I think?
+    wanted.channels = 2;    // 1 = mono, 2 = stereo.
+    wanted.samples = 2048;  // Samples per function call. I think?
     wanted.callback = fill_audio;
     wanted.userdata = NULL;
 
