@@ -1,14 +1,16 @@
 #include <SDL2/SDL.h>
+#include <stdint.h>
 #include <stdbool.h>
+#include <tgmath.h>
 
 SDL_AudioSpec wanted;
-void fill_audio(void *udata, Uint8 *stream, int len);
+void fill_audio(void *udata, uint8_t *stream, int length);
 
 bool open_audio_device()
 {
     /* Set the audio format */
     wanted.freq = 22050;
-    wanted.format = AUDIO_S16;
+    wanted.format = AUDIO_U8;
     wanted.channels = 2;    /* 1 = mono, 2 = stereo */
     wanted.samples = 1024;  /* Good low-latency value for callback */
     wanted.callback = fill_audio;
@@ -23,25 +25,25 @@ bool open_audio_device()
     return true;
 }
 
-static Uint8 *audio_chunk;
-static Uint32 audio_len;
-static Uint8 *audio_pos;
+static uint8_t *audio_chunk;
+static uint32_t audio_length;
+static uint8_t *audio_position;
 
 /* The audio function callback takes the following parameters:
  * stream:  A pointer to the audio buffer to be filled
  * len:     The length (in bytes) of the audio buffer
  */
-void fill_audio(void *udata, Uint8 *stream, int len)
+void fill_audio(void *udata, uint8_t *stream, int length)
 {
     /* Only play if we have data left */
-    if ( audio_len == 0 )
+    if ( audio_length == 0 )
         return;
 
     /* Mix as much data as possible */
-    len = ( len > audio_len ? audio_len : len );
-    SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);
-    audio_pos += len;
-    audio_len -= len;
+    length = fmin(audio_length, length);
+    SDL_MixAudio(stream, audio_position, length, SDL_MIX_MAXVOLUME / 2);
+    audio_position += length;
+    audio_length   -= length;
 }
 
 int main(int argc, char *argv[])
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
 
     ;;;;;
 
-    audio_pos = audio_chunk;
+    audio_position = audio_chunk;
 
     /* Let the callback function play the audio chunk */
     SDL_PauseAudio(0);
@@ -60,7 +62,7 @@ int main(int argc, char *argv[])
     ;;;;;
 
     /* Wait for sound to complete */
-    while ( audio_len > 0 ) {
+    while ( audio_length > 0 ) {
         SDL_Delay(100);         /* Sleep 1/10 second */
     }
     SDL_CloseAudio();

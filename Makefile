@@ -43,12 +43,8 @@ windows: prereqs ${WINDOWS_EXE}
 ${WINDOWS_EXE}:
 	${WINDOWS_CC} ${COMPILER_FLAGS} ${LINKER_FLAGS} ${SRCFILES} -o ${WINDOWS_EXE} ${WINDOWS_SDL2_CFLAGS} ${WINDOWS_SDL2_LDFLAGS} --static
 
-config.mk:
-	@printf "Before compiling, copy config.mk.dist to config.mk and edit it if necessary.\n"
-	@false
-
 clean:
 	@find . -name '*.o' -delete
-	@rm -f fuck
+	@rm -f fuck fuck.exe
 
 .PHONY: all linux windows clean
