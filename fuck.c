@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <tgmath.h>
 
 SDL_AudioSpec wanted;
 void fill_audio(void *udata, uint8_t *stream, int length);
@@ -10,8 +9,8 @@ bool open_audio_device()
 {
     /* Set the audio format */
     wanted.freq = 22050;
-    wanted.format = AUDIO_U8;
-    wanted.channels = 2;    /* 1 = mono, 2 = stereo */
+    wanted.format = AUDIO_U16;
+    wanted.channels = 1;    /* 1 = mono, 2 = stereo */
     wanted.samples = 1024;  /* Good low-latency value for callback */
     wanted.callback = fill_audio;
     wanted.userdata = NULL;
@@ -26,7 +25,7 @@ bool open_audio_device()
 }
 
 static uint8_t *audio_chunk;
-static uint32_t audio_length;
+static int audio_length;
 static uint8_t *audio_position;
 
 /* The audio function callback takes the following parameters:
@@ -40,7 +39,7 @@ void fill_audio(void *udata, uint8_t *stream, int length)
         return;
 
     /* Mix as much data as possible */
-    length = fmin(audio_length, length);
+    length = (audio_length < length) ? audio_length : length;
     SDL_MixAudio(stream, audio_position, length, SDL_MIX_MAXVOLUME / 2);
     audio_position += length;
     audio_length   -= length;

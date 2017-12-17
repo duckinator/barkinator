@@ -2,8 +2,9 @@ include config.mk
 
 SRCFILES = fuck.c
 
-
 FILE_NAME=fuck
+
+CC := gcc
 
 LINUX_EXE=${FILE_NAME}
 WINDOWS_EXE=${FILE_NAME}.exe
@@ -17,7 +18,7 @@ WINDOWS_SDL2_CFLAGS := $(shell ${WINDOWS_SDL2_CONFIG} --cflags)
 WINDOWS_SDL2_LDFLAGS := $(shell ${WINDOWS_SDL2_CONFIG} --static-libs)
 
 # Copypasta from Faulty.
-override COMPILER_FLAGS += -std=c11 -Wall -g -Iinclude -Wextra -Wunused -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-overflow=4 -Wfloat-equal -Wwrite-strings -Wconversion -Wundef -Wtrigraphs -Wunused-parameter -Wunknown-pragmas -Wcast-align -Wswitch-enum -Waggregate-return -Wmissing-noreturn -Wmissing-format-attribute -Wpacked -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wdisabled-optimization -Wbad-function-cast -Wunused-function -Werror=implicit-function-declaration -gdwarf-2 -pedantic-errors -O0
+override COMPILER_FLAGS += -std=c11 -Wall -g -Wextra -Wunused -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-overflow=4 -Wfloat-equal -Wwrite-strings -Wconversion -Wundef -Wtrigraphs -Wunused-parameter -Wunknown-pragmas -Wcast-align -Wswitch-enum -Waggregate-return -Wmissing-noreturn -Wmissing-format-attribute -Wpacked -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wdisabled-optimization -Wbad-function-cast -Wunused-function -Werror=implicit-function-declaration -gdwarf-2 -pedantic-errors -O0
 
 override LINKER_FLAGS += ${SDL2_LDFLAGS}
 
