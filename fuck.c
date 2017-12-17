@@ -19,9 +19,9 @@ static uint16_t x = 0;
 void generate_chunk(uint16_t *buffer, uint32_t length)
 {
     for (uint32_t i = 0 ; i < length; i++) {
-        if (x > 300) {
-            x = 0;
-        }
+//        if (x > 300) {
+//            x = 0;
+//        }
         x++;
         buffer[i] = x;
     }
@@ -43,6 +43,11 @@ void fill_audio(void *udata, uint8_t *stream, int length)
 
     uint32_t ulength = (uint32_t)length;
     uint8_t *buffer = malloc(ulength);
+
+    if (buffer == NULL) {
+        FAIL("buffer is NULL");
+    }
+
     generate_chunk((uint16_t*)buffer, ulength);
 
     SDL_MixAudio(stream, buffer, ulength, SDL_MIX_MAXVOLUME / 2);
