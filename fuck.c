@@ -55,6 +55,13 @@ int two() {
     return louder(square(60, (i >> 10 | i >> 3) & (i << 2)));
 }
 
+int three() {
+    return louder(square(20, (i >> 10 | i >> 3) & (i << 4)));
+}
+
+int four() {
+    return louder((square(20, i + 1) & sawtooth(20, i + 1)) << 2);
+}
 
 #define foreach(fn, ary, n, ...)                            \
     for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
@@ -65,6 +72,8 @@ int two() {
 int (*sounds[NUM_OSCILLATORS])() = {
     one,
     two,
+//    three,
+//    four,
 };
 
 void run_oscillator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
