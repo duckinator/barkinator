@@ -15,9 +15,16 @@ void cleanup()
     SDL_CloseAudio();
 }
 
-uint32_t generate_chunk(uint32_t length)
+static uint16_t x = 0;
+void generate_chunk(uint16_t *buffer, uint32_t length)
 {
-    return 0;
+    for (uint32_t i = 0 ; i < length; i++) {
+        if (x > 300) {
+            x = 0;
+        }
+        x++;
+        buffer[i] = x;
+    }
 }
 
 /*
@@ -34,13 +41,14 @@ void fill_audio(void *udata, uint8_t *stream, int length)
         return;
     }
 
-    uint32_t ulength = (uint32_t)length; // FUCKING BITE ME, SDL.
+    uint32_t ulength = (uint32_t)length;
     uint8_t *buffer = malloc(ulength);
-    memset(buffer, 0, ulength);
+    generate_chunk((uint16_t*)buffer, ulength);
 
     SDL_MixAudio(stream, buffer, ulength, SDL_MIX_MAXVOLUME / 2);
 
-    free(buffer);
+    // Why the fuck does this cause a memory access error?!
+    //free(original_buffer);
 }
 
 // Acquire access to an audio device.
