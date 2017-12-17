@@ -37,7 +37,7 @@ int three() {
     printf("foreach(" #fn ", " #ary ", " #n ", ...)\r\n");      \
     for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
         printf("    %i\r\n", __fe_idx);\
-        fn(ary[__fe_idx], ##__VA_ARGS__);\
+        fn(ary[__fe_idx], __fe_idx, ##__VA_ARGS__);\
     }
 
 #define NUM_SOUNDS 3
@@ -47,9 +47,15 @@ int (*sounds[NUM_SOUNDS])() = {
     three
 };
 
-void run_generator(int (*fn)(), int *ibuffer, uint32_t idx) {
-    ibuffer[idx] = fn();
+size_t run_generator(int (*fn)(), size_t fe_idx, int *ibuffer, uint32_t ilength, uint32_t idx) {
+    uint32_t current = idx + fe_idx;
+    if (current > ilength) {
+        current -= ilength;
+    }
+
+    ibuffer[current] = fn();
     i++;
+    return fe_idx;
 }
 
 void generate_chunk(uint8_t *buffer, uint32_t length)
@@ -59,8 +65,7 @@ void generate_chunk(uint8_t *buffer, uint32_t length)
     uint32_t ilength = (length * sizeof(uint8_t)) / sizeof(int);
 
     for (uint32_t idx = 0; idx < ilength; idx++) {
-//        foreach(run_generator, sounds, NUM_SOUNDS, ibuffer, idx);
-        run_generator(one, ibuffer, idx);
+        idx += foreach(run_generator, sounds, NUM_SOUNDS, ibuffer, ilength, idx);
     }
 }
 
