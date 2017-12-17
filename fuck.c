@@ -26,11 +26,7 @@ int one() {
 }
 
 int two() {
-  return (i * (i >> 30 | i >> 5));
-}
-
-int three() {
-  return (i * (i >> 10 | i >> 3));
+  return (i * (i >> 50 | i >> 3));
 }
 
 #define foreach(fn, ary, n, ...)                            \
@@ -38,14 +34,13 @@ int three() {
         fn(ary[__fe_idx], ##__VA_ARGS__);         \
     }
 
-#define NUM_SOUNDS 3
-int (*sounds[NUM_SOUNDS])() = {
+#define NUM_OSCILLATORS 2
+int (*sounds[NUM_OSCILLATORS])() = {
     one,
     two,
-    three
 };
 
-void run_generator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
+void run_oscillator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
     ibuffer[idx] = fn();
     i++;
 }
@@ -56,8 +51,8 @@ void generate_chunk(uint8_t *buffer, uint32_t length)
     int *ibuffer = (int*)buffer;
     uint32_t ilength = (length * sizeof(uint8_t)) / sizeof(int);
 
-    for (uint32_t idx = 0; idx < ilength; idx) {
-        foreach(run_generator, sounds, NUM_SOUNDS, ibuffer, ilength, idx++);
+    for (uint32_t idx = 0; idx < ilength;) {
+        foreach(run_oscillator, sounds, NUM_OSCILLATORS, ibuffer, ilength, idx++);
     }
 }
 
