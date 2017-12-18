@@ -3,10 +3,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "oscillators.h"
+#include "audio.h"
 #include "common.h"
-
-SDL_AudioSpec wanted;
-
 
 #define NUM_OSCILLATORS 2
 int (*sounds[NUM_OSCILLATORS])() = {
@@ -34,61 +32,9 @@ void generate_chunk(uint8_t *buffer, uint32_t length)
     }
 }
 
-/*
- * Generate audio and shove it into the output stream.
- *
- * +udata+:  Fuck if I even know what this is for.
- * +stream+: Pointer to the audio buffer to be filled.
- * +length+: The length (in bytes) of the audio buffer.
- */
-void fill_audio(void *udata, uint8_t *stream, int length)
-{
-    if (length < 0) {
-        FAIL("fill_audio: ??? length < 0");
-        return;
-    }
-
-    uint32_t ulength = (uint32_t)length;
-    uint8_t *buffer = malloc(ulength);
-
-    if (buffer == NULL) {
-        FAIL("buffer is NULL");
-    }
-
-    generate_chunk(buffer, ulength);
-
-    SDL_MixAudio(stream, buffer, ulength, SDL_MIX_MAXVOLUME / 2);
-
-    // Why the fuck does this cause a memory access error?!
-    //free(original_buffer);
-    SDL_Delay(10);
-}
-
-// Acquire access to an audio device.
-bool open_audio_device(void (*callback)())
-{
-    // Specify wanted audio format.
-    // See configuration section at the top for details.
-    wanted.freq     = SAMPLE_RATE;
-    wanted.format   = AUDIO_U8;
-    wanted.channels = CHANNELS;
-    wanted.samples  = SAMPLES;
-    wanted.callback = callback;
-    wanted.userdata = NULL;
-
-    // Open the audio device, forcing the desired format.
-    if (SDL_OpenAudio(&wanted, NULL) < 0) {
-        FAIL("Couldn't open audio device: %s", SDL_GetError());
-        return false;
-    }
-
-    return true;
-}
-
 void cleanup()
 {
     keep_running = false;
-    SDL_CloseAudio();
 }
 
 bool setup(void (*callback)())
@@ -97,13 +43,13 @@ bool setup(void (*callback)())
     atexit(cleanup);
 
     // Initialize audio device.
-    return open_audio_device(callback);
+    return audio_setup(callback);
 }
 
 
 int main(int argc, char *argv[])
 {
-    keep_running = setup(fill_audio);
+    keep_running = setup(generate_chunk);
 
     // Play audio.
     SDL_PauseAudio(0);
