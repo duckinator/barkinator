@@ -11,10 +11,10 @@ int (*sounds[])() = {
     NULL,
 };
 
-extern long i;
+long i = 0;
 
 void run_oscillator(int (*fn)(), int *buffer, uint32_t length, uint32_t idx) {
-    buffer[idx] = fn();
+    buffer[idx] = fn(i);
     i++;
 }
 
