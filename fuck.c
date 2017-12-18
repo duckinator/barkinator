@@ -8,22 +8,15 @@
 
 /* ==== START CONFIGURATION ==== */
 
-static size_t sample_rate   = 96000; // Sample rate we want the device to accept.
-static size_t channels      = 2;     // 1 = mono, 2 = stereo.
-static size_t samples       = 2048;  // Samples per function call, I think?
+#define SAMPLE_RATE 96000 /* Sample rate we want the device to accept. */
+#define CHANNELS    2     /* 1 = mono, 2 = stereo. */
+#define SAMPLES     2048  /* Samples per function call, I think? */
 
 /* ==== END   CONFIGURATION ==== */
 
 
 SDL_AudioSpec wanted;
 bool keep_running = true;
-
-void cleanup()
-{
-    keep_running = false;
-    SDL_CloseAudio();
-}
-
 
 #define quieter(x) ( ((x) & 0xFF) >> 2)
 #define louder(x)  (  (x) << 2 )
@@ -32,12 +25,12 @@ long i = 0;
 
 // TODO: Verify this actually generates a sawtooth wave.
 uint8_t sawtooth(size_t frequency, uint32_t idx) {
-    size_t period_samples = sample_rate / frequency;
+    size_t period_samples = SAMPLE_RATE / frequency;
     return (idx % period_samples) / 2;
 }
 
 uint8_t square(size_t frequency, uint32_t idx) {
-    size_t period_samples = sample_rate / frequency;
+    size_t period_samples = SAMPLE_RATE / frequency;
     size_t half_period_samples = period_samples / 2;
 
     if ((idx % period_samples) > half_period_samples) {
@@ -72,8 +65,8 @@ int four() {
 int (*sounds[NUM_OSCILLATORS])() = {
     one,
     two,
-//    three,
-//    four,
+    //    three,
+    //    four,
 };
 
 void run_oscillator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
@@ -123,30 +116,45 @@ void fill_audio(void *udata, uint8_t *stream, int length)
 }
 
 // Acquire access to an audio device.
-void open_audio_device()
+bool open_audio_device(void (*callback)())
 {
     // Specify wanted audio format.
     // See configuration section at the top for details.
-    wanted.freq     = sample_rate;
+    wanted.freq     = SAMPLE_RATE;
     wanted.format   = AUDIO_U8;
-    wanted.channels = channels;
-    wanted.samples  = samples;
-    wanted.callback = fill_audio;
+    wanted.channels = CHANNELS;
+    wanted.samples  = SAMPLES;
+    wanted.callback = callback;
     wanted.userdata = NULL;
 
     // Open the audio device, forcing the desired format.
     if (SDL_OpenAudio(&wanted, NULL) < 0) {
         FAIL("Couldn't open audio device: %s", SDL_GetError());
+        return false;
     }
+
+    return true;
 }
 
-int main(int argc, char *argv[])
+void cleanup()
+{
+    keep_running = false;
+    SDL_CloseAudio();
+}
+
+bool setup(void (*callback)())
 {
     // Always run cleanup() before exiting.
     atexit(cleanup);
 
     // Initialize audio device.
-    open_audio_device();
+    return open_audio_device(callback);
+}
+
+
+int main(int argc, char *argv[])
+{
+    keep_running = setup(fill_audio);
 
     // Play audio.
     SDL_PauseAudio(0);
