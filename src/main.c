@@ -16,19 +16,15 @@ int (*sounds[NUM_OSCILLATORS])() = {
 
 extern long i;
 
-void run_oscillator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
-    ibuffer[idx] = fn();
+void run_oscillator(int (*fn)(), int *buffer, uint32_t length, uint32_t idx) {
+    buffer[idx] = fn();
     i++;
 }
 
-void generate_chunk(uint8_t *buffer, uint32_t length)
+void generate_chunk(int *buffer, uint32_t length)
 {
-    memset(buffer, 0, length);
-    int *ibuffer = (int*)buffer;
-    uint32_t ilength = (length * sizeof(uint8_t)) / sizeof(int);
-
-    for (uint32_t idx = 0; idx < ilength;) {
-        foreach(run_oscillator, sounds, NUM_OSCILLATORS, ibuffer, ilength, idx++);
+    for (uint32_t idx = 0; idx < length;) {
+        foreach(run_oscillator, sounds, NUM_OSCILLATORS, buffer, length, idx++);
     }
 }
 

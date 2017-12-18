@@ -25,7 +25,11 @@ void fill_audio(void *udata, uint8_t *stream, int length)
         FAIL("buffer is NULL");
     }
 
-    audio_generate_chunk(buffer, ulength);
+    memset(buffer, 0, length);
+    int *ibuffer = (int*)buffer;
+    uint32_t ilength = (length * sizeof(uint8_t)) / sizeof(int);
+
+    audio_generate_chunk(ibuffer, ilength);
 
     SDL_MixAudio(stream, buffer, ulength, SDL_MIX_MAXVOLUME / 2);
 
