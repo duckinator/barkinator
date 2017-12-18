@@ -69,5 +69,12 @@ bool audio_setup(void (*generate_chunk_)())
     atexit(audio_cleanup);
     audio_generate_chunk = generate_chunk_;
 
-    return open_audio_device();
+    if (!open_audio_device()) {
+        return false;
+    }
+
+    // Play audio.
+    SDL_PauseAudio(0);
+
+    return true;
 }

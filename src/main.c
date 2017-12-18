@@ -1,7 +1,4 @@
 #include <SDL.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include "oscillators.h"
 #include "audio.h"
 #include "common.h"
@@ -28,27 +25,17 @@ void generate_chunk(int *buffer, uint32_t length)
     }
 }
 
-void cleanup()
-{
-    keep_running = false;
-}
-
 bool setup(void (*callback)())
 {
-    // Always run cleanup() before exiting.
-    atexit(cleanup);
-
     // Initialize audio device.
     return audio_setup(callback);
 }
 
-
 int main(int argc, char *argv[])
 {
-    keep_running = setup(generate_chunk);
-
-    // Play audio.
-    SDL_PauseAudio(0);
+    if (!setup(generate_chunk)) {
+        return 1;
+    }
 
     // Busy loop until we want to exit.
     while (keep_running) {
