@@ -34,7 +34,8 @@ Synth *new_synth(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c)
 }
 
 void run_synth(Synth *synth, int *buffer, uint32_t length, uint32_t buffer_idx) {
-    long int idx = (i >> synth->a | i >> synth->b) & (i >> synth->c);
+    long int cof = (synth->c < 0) ? (i << -(synth->c)) : (i >> synth->c);
+    long int idx = (i >> synth->a | i >> synth->b) & cof;
 
     buffer[buffer_idx] = louder(synth->oscillator(synth->frequency, idx));
     i++;
