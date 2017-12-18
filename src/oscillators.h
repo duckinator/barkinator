@@ -6,9 +6,5 @@
 
 uint8_t sawtooth(size_t frequency, uint32_t idx);
 uint8_t square(size_t frequency, uint32_t idx);
-int one();
-int two();
-int three();
-int four();
 
 #endif

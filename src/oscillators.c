@@ -17,20 +17,3 @@ uint8_t square(size_t frequency, uint32_t idx) {
         return 0;
     }
 }
-
-int one(long i) {
-    return louder(sawtooth(30, (i >> 12 | i >> 3) & (i >> 4)));
-}
-
-int two(long i) {
-    return louder(square(60, (i >> 10 | i >> 3) & (i << 2)));
-}
-
-int three(long i) {
-    return louder(square(20, (i >> 10 | i >> 3) & (i << 4)));
-}
-
-int four(long i) {
-    return louder((square(20, i + 1) & sawtooth(20, i + 1)) << 2);
-}
-
