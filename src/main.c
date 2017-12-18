@@ -16,7 +16,7 @@ void run_synth(Synth *synth, int *buffer, uint32_t length, uint32_t buffer_idx) 
     long int cof = (synth->c < 0) ? (i << -(synth->c)) : (i >> synth->c);
     long int idx = (i >> synth->a | i >> synth->b) & cof;
 
-    buffer[buffer_idx] = louder(synth->oscillator(synth->frequency, idx));
+    buffer[buffer_idx] = louder(synth->oscillator(synth->frequency, idx)) - 50;
     i++;
 }
 
