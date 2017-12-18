@@ -1,15 +1,8 @@
 #include <SDL.h>
 #include "oscillators.h"
+#include "synth.h"
 #include "audio.h"
 #include "common.h"
-
-typedef struct synthesizer_s {
-    uint8_t (*oscillator)();
-    size_t frequency;
-    int a;
-    int b;
-    int c;
-} Synth;
 
 Synth *synths[] = {
     NULL,
@@ -18,20 +11,6 @@ Synth *synths[] = {
 };
 
 long i = 0;
-
-Synth *new_synth(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c)
-{
-    Synth *synth = malloc(sizeof(Synth));
-    memset(synth, 0, sizeof(Synth));
-
-    synth->oscillator   = oscillator;
-    synth->frequency    = frequency;
-    synth->a            = a;
-    synth->b            = b;
-    synth->c            = c;
-
-    return synth;
-}
 
 void run_synth(Synth *synth, int *buffer, uint32_t length, uint32_t buffer_idx) {
     long int cof = (synth->c < 0) ? (i << -(synth->c)) : (i >> synth->c);
