@@ -3,12 +3,12 @@
 #include "audio.h"
 #include "common.h"
 
-#define NUM_OSCILLATORS 2
-int (*sounds[NUM_OSCILLATORS])() = {
+int (*sounds[])() = {
     one,
     two,
     //    three,
     //    four,
+    NULL,
 };
 
 extern long i;
@@ -21,7 +21,7 @@ void run_oscillator(int (*fn)(), int *buffer, uint32_t length, uint32_t idx) {
 void generate_chunk(int *buffer, uint32_t length)
 {
     for (uint32_t idx = 0; idx < length;) {
-        foreach(run_oscillator, sounds, NUM_OSCILLATORS, buffer, length, idx++);
+        foreach(run_oscillator, sounds, buffer, length, idx++);
     }
 }
 

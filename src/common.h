@@ -12,9 +12,9 @@
 
 #define FAIL(...) error(1, 0, __VA_ARGS__);
 
-#define foreach(fn, ary, n, ...)                            \
-    for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
-        fn(ary[__fe_idx], ##__VA_ARGS__);         \
+#define foreach(fn, ary, ...)                                       \
+    for (size_t __fe_idx = 0; ary[__fe_idx] != NULL; __fe_idx++) {  \
+        fn(ary[__fe_idx], ##__VA_ARGS__);                           \
     }
 
 static bool keep_running = true;
