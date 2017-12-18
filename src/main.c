@@ -2,64 +2,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <error.h>
-
-#define FAIL(...) error(1, 0, __VA_ARGS__);
-
-/* ==== START CONFIGURATION ==== */
-
-#define SAMPLE_RATE 96000 /* Sample rate we want the device to accept. */
-#define CHANNELS    2     /* 1 = mono, 2 = stereo. */
-#define SAMPLES     2048  /* Samples per function call, I think? */
-
-/* ==== END   CONFIGURATION ==== */
-
+#include "oscillators.h"
+#include "common.h"
 
 SDL_AudioSpec wanted;
-bool keep_running = true;
 
-#define quieter(x) ( ((x) & 0xFF) >> 2)
-#define louder(x)  (  (x) << 2 )
-
-long i = 0;
-
-// TODO: Verify this actually generates a sawtooth wave.
-uint8_t sawtooth(size_t frequency, uint32_t idx) {
-    size_t period_samples = SAMPLE_RATE / frequency;
-    return (idx % period_samples) / 2;
-}
-
-uint8_t square(size_t frequency, uint32_t idx) {
-    size_t period_samples = SAMPLE_RATE / frequency;
-    size_t half_period_samples = period_samples / 2;
-
-    if ((idx % period_samples) > half_period_samples) {
-        return 255;
-    } else {
-        return 0;
-    }
-}
-
-int one() {
-    return louder(sawtooth(30, (i >> 12 | i >> 3) & (i >> 4)));
-}
-
-int two() {
-    return louder(square(60, (i >> 10 | i >> 3) & (i << 2)));
-}
-
-int three() {
-    return louder(square(20, (i >> 10 | i >> 3) & (i << 4)));
-}
-
-int four() {
-    return louder((square(20, i + 1) & sawtooth(20, i + 1)) << 2);
-}
-
-#define foreach(fn, ary, n, ...)                            \
-    for (size_t __fe_idx = 0; __fe_idx < n; __fe_idx++) {   \
-        fn(ary[__fe_idx], ##__VA_ARGS__);         \
-    }
 
 #define NUM_OSCILLATORS 2
 int (*sounds[NUM_OSCILLATORS])() = {
@@ -68,6 +15,8 @@ int (*sounds[NUM_OSCILLATORS])() = {
     //    three,
     //    four,
 };
+
+extern long i;
 
 void run_oscillator(int (*fn)(), int *ibuffer, uint32_t ilength, uint32_t idx) {
     ibuffer[idx] = fn();
