@@ -21,8 +21,10 @@
 #define MAX_VERTEX_MEMORY 512 * 1024
 #define MAX_ELEMENT_MEMORY 128 * 1024
 
+#include "synth/oscillators.h"
+
 #include "synth/synth.h"
-extern Synth *synths;
+extern Synth *synths[];
 
 typedef struct synth_gui_s {
     SDL_Window *win;
@@ -146,6 +148,8 @@ SynthPosition *gui_calculate_synth_position(SynthGui *gui,
 
 void gui_add_synth(SynthGui *gui, size_t rows, size_t columns, size_t synth_index)
 {
+    Synth *synth = synths[synth_index];
+
     SynthPosition *pos = gui_calculate_synth_position(gui, rows, columns, synth_index);
 
     size_t pretty_synth_index = synth_index + 1;
@@ -158,18 +162,26 @@ void gui_add_synth(SynthGui *gui, size_t rows, size_t columns, size_t synth_inde
     if (nk_begin(gui->ctx, column_label, nk_rect(pos->left, pos->top, pos->width, pos->height),
                 NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
-        enum {EASY, HARD};
-        static int op = EASY;
-        static int property = 20;
-
         nk_layout_row_static(gui->ctx, 30, 80, 1);
         if (nk_button_label(gui->ctx, "button"))
             printf("button pressed!\n");
         nk_layout_row_dynamic(gui->ctx, 30, 2);
-        if (nk_option_label(gui->ctx, "easy", op == EASY)) op = EASY;
-        if (nk_option_label(gui->ctx, "hard", op == HARD)) op = HARD;
+
+        if (nk_option_label(gui->ctx, "sawtooth", synth->oscillator == oscillators[SAWTOOTH])) {
+            synth->oscillator = oscillators[SAWTOOTH];
+        }
+        if (nk_option_label(gui->ctx, "square",   synth->oscillator == oscillators[SQUARE])) {
+            synth->oscillator = oscillators[SQUARE];
+        }
+
         nk_layout_row_dynamic(gui->ctx, 22, 1);
-        nk_property_int(gui->ctx, "Compression:", 0, &property, 100, 10, 1);
+        nk_property_int(gui->ctx, "A", 0, &(synth->a), 100, 10, 1);
+
+        nk_layout_row_dynamic(gui->ctx, 22, 1);
+        nk_property_int(gui->ctx, "B", 0, &(synth->b), 100, 10, 1);
+
+        nk_layout_row_dynamic(gui->ctx, 22, 1);
+        nk_property_int(gui->ctx, "C", 0, &(synth->c), 100, 10, 1);
     }
     nk_end(gui->ctx);
 }
@@ -181,7 +193,7 @@ void gui_main()
     struct nk_color background = nk_rgb(28,48,62);
 
     int rows = 2; /* synth settings + main controls. */
-    int number_of_synths = 3;
+    int number_of_synths = 2;
 
     int columns = number_of_synths;
 

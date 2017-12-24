@@ -12,7 +12,7 @@
 Synth *synths[] = {
     NULL,
     NULL,
-    NULL,
+    NULL, /* To terminate foreach(). */
 };
 
 // Magical variable used to generate audio.
