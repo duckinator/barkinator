@@ -25,6 +25,8 @@ typedef struct synth_gui_s {
     SDL_Window *win;
     SDL_GLContext glContext;
     struct nk_context *ctx;
+    int height;
+    int width;
 } SynthGui;
 
 SynthGui *gui_new()
@@ -44,12 +46,11 @@ SynthGui *gui_new()
             0, 0, 640, 480,
             SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_FULLSCREEN_DESKTOP);
     gui->glContext = SDL_GL_CreateContext(gui->win);
-    int win_width;
-    int win_height;
-    SDL_GetWindowSize(gui->win, &win_width, &win_height);
+
+    SDL_GetWindowSize(gui->win, &(gui->width), &(gui->height));
 
     /* OpenGL setup */
-    glViewport(0, 0, win_width, win_height);
+    glViewport(0, 0, gui->width, gui->height);
     glewExperimental = 1;
     if (glewInit() != GLEW_OK) {
         fprintf(stderr, "Failed to setup GLEW\n");
@@ -109,11 +110,20 @@ void gui_main()
     SynthGui *gui = gui_new();
 
     struct nk_color background = nk_rgb(28,48,62);
+
+    int vertical_margin = 50;
+    int horizontal_margin = 50;
+    int column_height = gui->height - (vertical_margin * 2);
+
+    int columns = 4; /* 3 synths + 1 general controls. */
+
+    int column_spacing = 25;
+    int total_width = gui->width - (column_spacing * 2) - (horizontal_margin * 2);
+    int column_width = total_width / columns;
     while (poll_sdl_input(gui))
     {
-        if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, 200, 200),
-                    NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
-                    NK_WINDOW_CLOSABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
+        if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, column_width, column_height),
+                    NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
         {
             enum {EASY, HARD};
             static int op = EASY;
