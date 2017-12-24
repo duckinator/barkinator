@@ -1,4 +1,4 @@
-SYNTH_SRCFILES = src/synth/oscillators.c src/synth/audio.c src/synth/synth.c src/synth/main.c
+SYNTH_SRCFILES = src/synth/oscillators.c src/synth/audio.c src/synth/synth.c
 
 SRCFILES = ${SYNTH_SRCFILES} src/main.c src/gui.c
 
@@ -36,9 +36,9 @@ WINDOWS_SDL2_LDFLAGS := $(shell ${WINDOWS_SDL2_CONFIG} --static-libs)
 WINDOWS_GLEW_CFLAGS  := $(shell ${WINDOWS_PKG_CONFIG} --cflags glew)
 WINDOWS_GLEW_LDFLAGS := $(shell ${WINDOWS_PKG_CONFIG} --static --libs glew)
 
-# Copypasta from Faulty.
-override COMPILER_FLAGS += -std=c11 -Wall -g -Wextra -Wunused -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-overflow=4 -Wfloat-equal -Wwrite-strings -Wconversion -Wundef -Wtrigraphs -Wunused-parameter -Wunknown-pragmas -Wcast-align -Wswitch-enum -Wmissing-noreturn -Wmissing-format-attribute -Wpacked -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wdisabled-optimization -Wbad-function-cast -Wunused-function -Werror=implicit-function-declaration -gdwarf-2 -pedantic-errors -O0
-#-Waggregate-return
+override COMPILER_FLAGS += -std=c11 -Wall -g -Wextra -Wunused -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-overflow=4 -Wwrite-strings -Wundef -Wtrigraphs -Wunused-parameter -Wunknown-pragmas -Wcast-align -Wmissing-noreturn -Wmissing-format-attribute -Wpacked -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wdisabled-optimization -Wbad-function-cast -Wunused-function -Werror=implicit-function-declaration -Wno-suggest-attribute=format -gdwarf-2 -pedantic-errors -O0
+# The following have been removed because of excessive warnings from nuklea from nuklear.
+# -Wfloat-equal -Wswitch-enum -Wconversion -Waggregate-return
 
 override LINKER_FLAGS +=
 

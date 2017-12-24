@@ -8,8 +8,6 @@
 #define CHANNELS    2     /* 1 = mono, 2 = stereo. */
 #define SAMPLES     2048  /* Samples per function call, I think? */
 
-bool setup(int argc, char *argv[]);
-
 #define FAIL(...) error(1, 0, __VA_ARGS__);
 
 #define foreach(fn, ary, ...)                                       \

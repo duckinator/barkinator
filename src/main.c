@@ -1,11 +1,12 @@
 #include <SDL.h>
 #include "synth/common.h"
+#include "synth/synth.h"
 
 extern void gui_main();
 
 int main(int argc, char *argv[])
 {
-    if (!setup(argc, argv)) {
+    if (!synth_setup(argc, argv)) {
         return 1;
     }
 

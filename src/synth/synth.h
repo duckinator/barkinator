@@ -9,6 +9,9 @@ typedef struct synthesizer_s {
     int c;
 } Synth;
 
-Synth *new_synth(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c);
+
+bool synth_setup(int argc, char *argv[]);
+Synth *synth_new(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c);
+void synth_update(Synth *synth, uint8_t (*oscillator)(), size_t frequency, int a, int b, int c);
 
 #endif
