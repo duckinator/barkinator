@@ -22,6 +22,7 @@
 #define MAX_ELEMENT_MEMORY 128 * 1024
 
 #include "synth/oscillators.h"
+#include "synth/audio.h"
 
 #include "synth/synth.h"
 extern Synth *synths[];
@@ -163,10 +164,12 @@ void gui_add_synth(SynthGui *gui, size_t rows, size_t columns, size_t synth_inde
                 NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
         nk_layout_row_static(gui->ctx, 30, 80, 1);
-        if (nk_button_label(gui->ctx, "button"))
-            printf("button pressed!\n");
-        nk_layout_row_dynamic(gui->ctx, 30, 2);
+        if (nk_button_label(gui->ctx, "button")) {
+            audio_play();
+            synth->enabled = !(synth->enabled);
+        }
 
+        nk_layout_row_dynamic(gui->ctx, 30, 2);
         if (nk_option_label(gui->ctx, "sawtooth", synth->oscillator == oscillators[SAWTOOTH])) {
             synth->oscillator = oscillators[SAWTOOTH];
         }

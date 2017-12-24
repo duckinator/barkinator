@@ -24,6 +24,7 @@ Synth *synth_new(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c)
     memset(synth, 0, sizeof(Synth));
 
     synth_update(synth, oscillator, frequency, a, b, c);
+    synth->enabled = false;
 
     return synth;
 }

@@ -9,6 +9,7 @@ typedef struct synthesizer_s {
     int a;
     int b;
     int c;
+    bool enabled;
 } Synth;
 
 
