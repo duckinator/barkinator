@@ -27,44 +27,6 @@ typedef struct synth_gui_s {
     struct nk_context *ctx;
 } SynthGui;
 
-void gui_draw(SDL_Window *win, struct nk_color background)
-{
-    float bg[4];
-    int win_width;
-    int win_height;
-
-    nk_color_fv(bg, background);
-
-    SDL_GetWindowSize(win, &win_width, &win_height);
-
-    glViewport(0, 0, win_width, win_height);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(bg[0], bg[1], bg[2], bg[3]);
-
-    /* IMPORTANT: `nk_sdl_render` modifies some global OpenGL state
-     * with blending, scissor, face culling, depth test and viewport and
-     * defaults everything back into a default state.
-     * Make sure to either a.) save and restore or b.) reset your own state after
-     * rendering the UI. */
-    nk_sdl_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_MEMORY, MAX_ELEMENT_MEMORY);
-    SDL_GL_SwapWindow(win);
-}
-
-bool poll_sdl_input(SynthGui *gui)
-{
-    SDL_Event evt;
-    nk_input_begin(gui->ctx);
-    while (SDL_PollEvent(&evt)) {
-        if (evt.type == SDL_QUIT) {
-            return false;
-        }
-        nk_sdl_handle_event(&evt);
-    }
-    nk_input_end(gui->ctx);
-
-    return true;
-}
-
 SynthGui *gui_new()
 {
     SynthGui *gui = malloc(sizeof(SynthGui));
@@ -102,6 +64,44 @@ SynthGui *gui_new()
     nk_sdl_font_stash_end();
 
     return gui;
+}
+
+void gui_draw(SDL_Window *win, struct nk_color background)
+{
+    float bg[4];
+    int win_width;
+    int win_height;
+
+    nk_color_fv(bg, background);
+
+    SDL_GetWindowSize(win, &win_width, &win_height);
+
+    glViewport(0, 0, win_width, win_height);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(bg[0], bg[1], bg[2], bg[3]);
+
+    /* IMPORTANT: `nk_sdl_render` modifies some global OpenGL state
+     * with blending, scissor, face culling, depth test and viewport and
+     * defaults everything back into a default state.
+     * Make sure to either a.) save and restore or b.) reset your own state after
+     * rendering the UI. */
+    nk_sdl_render(NK_ANTI_ALIASING_ON, MAX_VERTEX_MEMORY, MAX_ELEMENT_MEMORY);
+    SDL_GL_SwapWindow(win);
+}
+
+bool poll_sdl_input(SynthGui *gui)
+{
+    SDL_Event evt;
+    nk_input_begin(gui->ctx);
+    while (SDL_PollEvent(&evt)) {
+        if (evt.type == SDL_QUIT) {
+            return false;
+        }
+        nk_sdl_handle_event(&evt);
+    }
+    nk_input_end(gui->ctx);
+
+    return true;
 }
 
 void gui_main()
