@@ -4,5 +4,7 @@
 #include <stdbool.h>
 
 bool audio_setup(void (*generate_chunk)());
+void audio_play();
+void audio_pause();
 
 #endif

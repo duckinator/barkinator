@@ -73,8 +73,15 @@ bool audio_setup(void (*generate_chunk_)())
         return false;
     }
 
-    // Play audio.
-    SDL_PauseAudio(0);
-
     return true;
+}
+
+void audio_play()
+{
+    SDL_PauseAudio(0);
+}
+
+void audio_pause()
+{
+    SDL_PauseAudio(1);
 }
