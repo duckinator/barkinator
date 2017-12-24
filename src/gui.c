@@ -108,15 +108,54 @@ bool poll_sdl_input(SynthGui *gui)
     return true;
 }
 
-void gui_add_synth(SynthGui *gui, size_t synth_index, int column_width, int row_height)
+typedef struct synth_gui_synth_position_s {
+    size_t top;
+    size_t left;
+    size_t width;
+    size_t height;
+} SynthPosition;
+
+SynthPosition *gui_calculate_synth_position(SynthGui *gui,
+        size_t rows, size_t columns, size_t synth_index)
 {
+    size_t vertical_margin = 50;
+    size_t horizontal_margin = 50;
+
+    size_t row_spacing = 25;
+    size_t total_height = gui->height - (row_spacing * (rows - 1)) - (vertical_margin * 2);
+    size_t row_height = total_height / rows;
+
+    size_t column_spacing = 25;
+    size_t total_width = gui->width - (column_spacing * (columns - 1)) - (horizontal_margin * 2);
+    size_t column_width = total_width / columns;
+
+    size_t synth_number = synth_index + 1;
+
+    SynthPosition *pos = malloc(sizeof(SynthPosition));
+    memset(pos, 0, sizeof(SynthPosition));
+
+
+    pos->top    = vertical_margin;
+    pos->left   = horizontal_margin + (column_spacing * (synth_index)) + (column_width * (synth_index));
+    pos->width  = column_width;
+    pos->height = row_height;
+
+    return pos;
+}
+
+
+void gui_add_synth(SynthGui *gui, size_t rows, size_t columns, size_t synth_index)
+{
+    SynthPosition *pos = gui_calculate_synth_position(gui, rows, columns, synth_index);
+
     size_t pretty_synth_index = synth_index + 1;
     size_t label_length = strlen("Synth ") + (pretty_synth_index / 10) + 2;
     char *column_label = malloc(label_length);
+
     memset(column_label, 0, label_length);
     snprintf(column_label, label_length, "Synth %u", pretty_synth_index);
 
-    if (nk_begin(gui->ctx, column_label, nk_rect(50 + (synth_index * column_width), 50, column_width, row_height),
+    if (nk_begin(gui->ctx, column_label, nk_rect(pos->left, pos->top, pos->width, pos->height),
                 NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
         enum {EASY, HARD};
@@ -141,27 +180,16 @@ void gui_main()
 
     struct nk_color background = nk_rgb(28,48,62);
 
+    int rows = 2; /* synth settings + main controls. */
     int number_of_synths = 3;
 
-
-    int vertical_margin = 50;
-    int horizontal_margin = 50;
-
-    int rows    = 2; /* synth settings + main controls. */
     int columns = number_of_synths;
 
-    int row_spacing = 25;
-    int total_height = gui->height - (row_spacing * (rows - 1)) - (vertical_margin * 2);
-    int row_height = total_height / rows;
-
-    int column_spacing = 25;
-    int total_width = gui->width - (column_spacing * (columns - 1)) - (horizontal_margin * 2);
-    int column_width = total_width / columns;
 
     while (poll_sdl_input(gui))
     {
         for (uint8_t i = 0; i < number_of_synths; i++) {
-            gui_add_synth(gui, i, column_width, row_height);
+            gui_add_synth(gui, rows, columns, i);
         }
 
         gui_draw(gui->win, background);
