@@ -21,6 +21,9 @@
 #define MAX_VERTEX_MEMORY 512 * 1024
 #define MAX_ELEMENT_MEMORY 128 * 1024
 
+#include "synth/synth.h"
+extern Synth *synths;
+
 typedef struct synth_gui_s {
     SDL_Window *win;
     SDL_GLContext glContext;
@@ -105,17 +108,46 @@ bool poll_sdl_input(SynthGui *gui)
     return true;
 }
 
+void gui_add_synth(SynthGui *gui, uint8_t synth_index, int column_width, int row_height)
+{
+    size_t label_length = strlen("Synth ") + (synth_index / 10) + 2;
+    char *column_label = malloc(label_length);
+    memset(column_label, 0, label_length);
+    snprintf(column_label, label_length, "Synth %u", synth_index);
+
+    if (nk_begin(gui->ctx, column_label, nk_rect(50, 50, column_width, row_height),
+                NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
+    {
+        enum {EASY, HARD};
+        static int op = EASY;
+        static int property = 20;
+
+        nk_layout_row_static(gui->ctx, 30, 80, 1);
+        if (nk_button_label(gui->ctx, "button"))
+            printf("button pressed!\n");
+        nk_layout_row_dynamic(gui->ctx, 30, 2);
+        if (nk_option_label(gui->ctx, "easy", op == EASY)) op = EASY;
+        if (nk_option_label(gui->ctx, "hard", op == HARD)) op = HARD;
+        nk_layout_row_dynamic(gui->ctx, 22, 1);
+        nk_property_int(gui->ctx, "Compression:", 0, &property, 100, 10, 1);
+    }
+    nk_end(gui->ctx);
+}
+
 void gui_main()
 {
     SynthGui *gui = gui_new();
 
     struct nk_color background = nk_rgb(28,48,62);
 
+    int number_of_synths = 3;
+
+
     int vertical_margin = 50;
     int horizontal_margin = 50;
 
     int rows    = 2; /* synth settings + main controls. */
-    int columns = 4; /* 3 synths + exit button and such. */
+    int columns = number_of_synths;
 
     int row_spacing = 25;
     int total_height = gui->height - (row_spacing * (rows - 1)) - (vertical_margin * 2);
@@ -124,25 +156,12 @@ void gui_main()
     int column_spacing = 25;
     int total_width = gui->width - (column_spacing * (columns - 1)) - (horizontal_margin * 2);
     int column_width = total_width / columns;
+
     while (poll_sdl_input(gui))
     {
-        if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, column_width, row_height),
-                    NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
-        {
-            enum {EASY, HARD};
-            static int op = EASY;
-            static int property = 20;
-
-            nk_layout_row_static(gui->ctx, 30, 80, 1);
-            if (nk_button_label(gui->ctx, "button"))
-                printf("button pressed!\n");
-            nk_layout_row_dynamic(gui->ctx, 30, 2);
-            if (nk_option_label(gui->ctx, "easy", op == EASY)) op = EASY;
-            if (nk_option_label(gui->ctx, "hard", op == HARD)) op = HARD;
-            nk_layout_row_dynamic(gui->ctx, 22, 1);
-            nk_property_int(gui->ctx, "Compression:", 0, &property, 100, 10, 1);
+        for (uint8_t i = 0; i < number_of_synths; i++) {
+            gui_add_synth(gui, i, column_width, row_height);
         }
-        nk_end(gui->ctx);
 
         gui_draw(gui->win, background);
     }
