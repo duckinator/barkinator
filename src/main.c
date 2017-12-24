@@ -12,9 +12,9 @@ int main(int argc, char *argv[])
     gui_main();
 
     // Busy loop until we want to exit.
-    while (keep_running) {
+/*    while (keep_running) {
         SDL_Delay(100); // Sleep 1/10th of a second.
-    }
+    }*/
 
     return 0;
 }
