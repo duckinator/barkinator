@@ -107,15 +107,10 @@ SynthGui *gui_new()
 void gui_main()
 {
     SynthGui *gui = gui_new();
-    bool running = true;
 
     struct nk_color background = nk_rgb(28,48,62);
-    while (running)
+    while (poll_sdl_input(gui))
     {
-        if (!poll_sdl_input(gui)) {
-            break;
-        }
-
         if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, 200, 200),
                     NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
                     NK_WINDOW_CLOSABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
