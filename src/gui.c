@@ -113,16 +113,20 @@ void gui_main()
 
     int vertical_margin = 50;
     int horizontal_margin = 50;
-    int column_height = gui->height - (vertical_margin * 2);
 
-    int columns = 4; /* 3 synths + 1 general controls. */
+    int rows    = 2; /* synth settings + main controls. */
+    int columns = 4; /* 3 synths + exit button and such. */
+
+    int row_spacing = 25;
+    int total_height = gui->height - (row_spacing * (rows - 1)) - (vertical_margin * 2);
+    int row_height = total_height / rows;
 
     int column_spacing = 25;
-    int total_width = gui->width - (column_spacing * 2) - (horizontal_margin * 2);
+    int total_width = gui->width - (column_spacing * (columns - 1)) - (horizontal_margin * 2);
     int column_width = total_width / columns;
     while (poll_sdl_input(gui))
     {
-        if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, column_width, column_height),
+        if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, column_width, row_height),
                     NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
         {
             enum {EASY, HARD};
