@@ -18,10 +18,14 @@
 #include "../nuklear/demo/sdl_opengl3/nuklear_sdl_gl3.h" // SHRUG. WHATEVER.
 
 
-#include "../nuklear/demo/calculator.c"
-
 #define MAX_VERTEX_MEMORY 512 * 1024
 #define MAX_ELEMENT_MEMORY 128 * 1024
+
+typedef struct synth_gui_s {
+    SDL_Window *win;
+    SDL_GLContext glContext;
+    struct nk_context *ctx;
+} SynthGui;
 
 void gui_draw(SDL_Window *win, struct nk_color background)
 {
@@ -46,31 +50,25 @@ void gui_draw(SDL_Window *win, struct nk_color background)
     SDL_GL_SwapWindow(win);
 }
 
-bool poll_sdl_input(struct nk_context *ctx)
+bool poll_sdl_input(SynthGui *gui)
 {
     SDL_Event evt;
-    nk_input_begin(ctx);
+    nk_input_begin(gui->ctx);
     while (SDL_PollEvent(&evt)) {
         if (evt.type == SDL_QUIT) {
             return false;
         }
         nk_sdl_handle_event(&evt);
     }
-    nk_input_end(ctx);
+    nk_input_end(gui->ctx);
 
     return true;
 }
 
-void gui_main()
+SynthGui *gui_new()
 {
-    /* Platform */
-    SDL_Window *win;
-    SDL_GLContext glContext;
-    struct nk_color background;
-    bool running = true;
-
-    /* GUI */
-    struct nk_context *ctx;
+    SynthGui *gui = malloc(sizeof(SynthGui));
+    memset(gui, 0, sizeof(SynthGui));
 
     /* SDL setup */
     SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
@@ -80,13 +78,13 @@ void gui_main()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    win = SDL_CreateWindow("Demo",
+    gui->win = SDL_CreateWindow("Demo",
             0, 0, 640, 480,
             SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN|SDL_WINDOW_ALLOW_HIGHDPI|SDL_WINDOW_FULLSCREEN_DESKTOP);
-    glContext = SDL_GL_CreateContext(win);
+    gui->glContext = SDL_GL_CreateContext(gui->win);
     int win_width;
     int win_height;
-    SDL_GetWindowSize(win, &win_width, &win_height);
+    SDL_GetWindowSize(gui->win, &win_width, &win_height);
 
     /* OpenGL setup */
     glViewport(0, 0, win_width, win_height);
@@ -96,21 +94,29 @@ void gui_main()
         exit(1);
     }
 
-    ctx = nk_sdl_init(win);
+    gui->ctx = nk_sdl_init(gui->win);
     /* Load Fonts: if none of these are loaded a default font will be used  */
     /* Load Cursor: if you uncomment cursor loading please hide the cursor */
     struct nk_font_atlas *atlas;
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
 
-    background = nk_rgb(28,48,62);
+    return gui;
+}
+
+void gui_main()
+{
+    SynthGui *gui = gui_new();
+    bool running = true;
+
+    struct nk_color background = nk_rgb(28,48,62);
     while (running)
     {
-        if (!poll_sdl_input(ctx)) {
+        if (!poll_sdl_input(gui)) {
             break;
         }
 
-        if (nk_begin(ctx, "Demo1", nk_rect(50, 50, 200, 200),
+        if (nk_begin(gui->ctx, "Demo1", nk_rect(50, 50, 200, 200),
                     NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
                     NK_WINDOW_CLOSABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
         {
@@ -118,22 +124,22 @@ void gui_main()
             static int op = EASY;
             static int property = 20;
 
-            nk_layout_row_static(ctx, 30, 80, 1);
-            if (nk_button_label(ctx, "button"))
+            nk_layout_row_static(gui->ctx, 30, 80, 1);
+            if (nk_button_label(gui->ctx, "button"))
                 printf("button pressed!\n");
-            nk_layout_row_dynamic(ctx, 30, 2);
-            if (nk_option_label(ctx, "easy", op == EASY)) op = EASY;
-            if (nk_option_label(ctx, "hard", op == HARD)) op = HARD;
-            nk_layout_row_dynamic(ctx, 22, 1);
-            nk_property_int(ctx, "Compression:", 0, &property, 100, 10, 1);
+            nk_layout_row_dynamic(gui->ctx, 30, 2);
+            if (nk_option_label(gui->ctx, "easy", op == EASY)) op = EASY;
+            if (nk_option_label(gui->ctx, "hard", op == HARD)) op = HARD;
+            nk_layout_row_dynamic(gui->ctx, 22, 1);
+            nk_property_int(gui->ctx, "Compression:", 0, &property, 100, 10, 1);
         }
-        nk_end(ctx);
+        nk_end(gui->ctx);
 
-        gui_draw(win, background);
+        gui_draw(gui->win, background);
     }
 
     nk_sdl_shutdown();
-    SDL_GL_DeleteContext(glContext);
-    SDL_DestroyWindow(win);
+    SDL_GL_DeleteContext(gui->glContext);
+    SDL_DestroyWindow(gui->win);
     SDL_Quit();
 }
