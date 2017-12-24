@@ -108,14 +108,15 @@ bool poll_sdl_input(SynthGui *gui)
     return true;
 }
 
-void gui_add_synth(SynthGui *gui, uint8_t synth_index, int column_width, int row_height)
+void gui_add_synth(SynthGui *gui, size_t synth_index, int column_width, int row_height)
 {
-    size_t label_length = strlen("Synth ") + (synth_index / 10) + 2;
+    size_t pretty_synth_index = synth_index + 1;
+    size_t label_length = strlen("Synth ") + (pretty_synth_index / 10) + 2;
     char *column_label = malloc(label_length);
     memset(column_label, 0, label_length);
-    snprintf(column_label, label_length, "Synth %u", synth_index);
+    snprintf(column_label, label_length, "Synth %u", pretty_synth_index);
 
-    if (nk_begin(gui->ctx, column_label, nk_rect(50, 50, column_width, row_height),
+    if (nk_begin(gui->ctx, column_label, nk_rect(50 + (synth_index * column_width), 50, column_width, row_height),
                 NK_WINDOW_BORDER|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
         enum {EASY, HARD};
