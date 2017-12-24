@@ -46,6 +46,21 @@ void gui_draw(SDL_Window *win, struct nk_color background)
     SDL_GL_SwapWindow(win);
 }
 
+bool poll_sdl_input(struct nk_context *ctx)
+{
+    SDL_Event evt;
+    nk_input_begin(ctx);
+    while (SDL_PollEvent(&evt)) {
+        if (evt.type == SDL_QUIT) {
+            return false;
+        }
+        nk_sdl_handle_event(&evt);
+    }
+    nk_input_end(ctx);
+
+    return true;
+}
+
 void gui_main()
 {
     /* Platform */
@@ -91,15 +106,10 @@ void gui_main()
     background = nk_rgb(28,48,62);
     while (running)
     {
-        /* Input */
-        SDL_Event evt;
-        nk_input_begin(ctx);
-        while (SDL_PollEvent(&evt)) {
-            if (evt.type == SDL_QUIT) goto cleanup;
-            nk_sdl_handle_event(&evt);
-        } nk_input_end(ctx);
+        if (!poll_sdl_input(ctx)) {
+            break;
+        }
 
-        /* GUI */
         if (nk_begin(ctx, "Demo1", nk_rect(50, 50, 200, 200),
                     NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
                     NK_WINDOW_CLOSABLE|NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
@@ -120,10 +130,8 @@ void gui_main()
         nk_end(ctx);
 
         gui_draw(win, background);
-        /* Draw */
     }
 
-cleanup:
     nk_sdl_shutdown();
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(win);
