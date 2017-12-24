@@ -1,5 +1,6 @@
 #include "oscillators.h"
 #include "common.h"
+#include "audio.h"
 
 // TODO: Verify this actually generates a sawtooth wave.
 uint8_t sawtooth(size_t frequency, uint32_t idx) {

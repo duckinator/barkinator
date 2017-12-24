@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include "audio.h"
 #include "common.h"
 
 void (*audio_generate_chunk)();
