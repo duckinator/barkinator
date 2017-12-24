@@ -6,7 +6,6 @@
 #include <SDL.h>
 #include "oscillators.h"
 #include "audio.h"
-#include "common.h"
 #include "synth.h"
 
 // These are the actual synthesizers! The number is hard-coded, atm.

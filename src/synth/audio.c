@@ -1,6 +1,8 @@
 #include <SDL.h>
+#include <error.h>
 #include "audio.h"
-#include "common.h"
+
+#define FAIL(...) error(1, 0, __VA_ARGS__);
 
 void (*audio_generate_chunk)();
 SDL_AudioSpec wanted;

@@ -1,5 +1,4 @@
 #include <SDL.h>
-#include "synth/common.h"
 #include "synth/synth.h"
 
 extern void gui_main();
