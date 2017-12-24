@@ -1,4 +1,6 @@
-SRCFILES = src/gui.c src/audio.c src/oscillators.c src/synth.c src/main.c
+SYNTH_SRCFILES = src/synth/oscillators.c src/synth/audio.c src/synth/synth.c
+
+SRCFILES = ${SYNTH_SRCFILES} src/main.c
 
 FILE_NAME=fuck
 

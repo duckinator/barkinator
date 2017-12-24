@@ -1,8 +1,8 @@
 #include <SDL.h>
-#include "oscillators.h"
-#include "synth.h"
-#include "audio.h"
-#include "common.h"
+#include "synth/oscillators.h"
+#include "synth/synth.h"
+#include "synth/audio.h"
+#include "synth/common.h"
 
 Synth *synths[] = {
     NULL,
