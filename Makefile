@@ -2,7 +2,7 @@ SYNTH_SRCFILES = src/synth/oscillators.c src/synth/audio.c src/synth/synth.c
 
 SRCFILES = ${SYNTH_SRCFILES} src/main.c src/gui.c
 
-FILE_NAME=fuck
+FILE_NAME := barkinator
 
 # ===== Tool executables =====
 
