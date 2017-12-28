@@ -38,7 +38,7 @@ void synth_update(Synth *synth, uint8_t (*oscillator)(), size_t frequency, int a
     synth->c            = c;
 }
 
-void run_synth(Synth *synth, int *buffer, uint32_t length, uint32_t buffer_idx) {
+void run_synth(Synth *synth, int *buffer, uint32_t buffer_idx) {
     long int cof = (synth->c < 0) ? (i << -(synth->c)) : (i >> synth->c);
     long int idx = (i >> synth->a | i >> synth->b) & cof;
 
@@ -48,8 +48,11 @@ void run_synth(Synth *synth, int *buffer, uint32_t length, uint32_t buffer_idx) 
 
 void generate_chunk(int *buffer, uint32_t length)
 {
-    for (uint32_t idx = 0; idx < length;) {
-        foreach(run_synth, synths, buffer, length, idx++);
+    size_t sidx = 0;
+    for (uint32_t idx = 0; idx < length; idx += sidx) {
+        for (sidx = 0; synths[sidx] != NULL; sidx++) {
+            run_synth(synths[sidx], buffer, idx + sidx);
+        }
     }
 }
 
