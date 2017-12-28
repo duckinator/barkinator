@@ -61,10 +61,5 @@ bool synth_setup(int argc, char *argv[])
     synths[0] = synth_new(sawtooth, 30, 12, 3,  4);
     synths[1] = synth_new(square,   60, 10, 3, -2);
 
-    if (!audio_setup(generate_chunk)) {
-        return false;
-    }
-
-
-    return true;
+    return audio_setup(generate_chunk);
 }
