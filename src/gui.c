@@ -178,13 +178,13 @@ void gui_add_synth(SynthGui *gui, size_t rows, size_t columns, size_t synth_inde
         }
 
         nk_layout_row_dynamic(gui->ctx, 22, 1);
-        nk_property_int(gui->ctx, "A", 0, &(synth->a), 100, 10, 1);
+        nk_property_int(gui->ctx, "A", 0, &(synth->a), 256, 10, 1);
 
         nk_layout_row_dynamic(gui->ctx, 22, 1);
-        nk_property_int(gui->ctx, "B", 0, &(synth->b), 100, 10, 1);
+        nk_property_int(gui->ctx, "B", 0, &(synth->b), 256, 10, 1);
 
         nk_layout_row_dynamic(gui->ctx, 22, 1);
-        nk_property_int(gui->ctx, "C", 0, &(synth->c), 100, 10, 1);
+        nk_property_int(gui->ctx, "C", 0, &(synth->c), 256, 10, 1);
     }
     nk_end(gui->ctx);
 }
