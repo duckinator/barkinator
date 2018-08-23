@@ -58,6 +58,14 @@ linux ${LINUX_EXE}:
 windows ${WINDOWS_EXE}:
 	${WINDOWS_CC} ${COMPILER_FLAGS} ${LINKER_FLAGS} ${SRCFILES} -o ${WINDOWS_EXE} ${WINDOWS_CFLAGS} ${WINDOWS_LDFLAGS} --static
 
+# Fetch all submodules.
+fetch-submodules:
+	git submodule update --recursive --init
+
+# Update to the latest available versions of all submodules.
+update-submodules:
+	git submodule update --recursive --remote --init
+
 clean:
 	@find . -name '*.o' -delete
 	@rm -f ${FILE_NAME} ${FILE_NAME}.exe
