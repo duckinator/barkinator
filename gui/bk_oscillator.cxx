@@ -76,12 +76,19 @@ BkOscillator::BkOscillator(int osc_number, Synth *synth)
     group->box(FL_THIN_UP_BOX);
     group->labelfont(1);
 
+
+    /* selecting a radio option disables all others in that group, so
+     * we wrap them in their own group. */
+    Fl_Group *radio_group = new Fl_Group(padding, group_top + y_offset,
+                                         group_width, group_height);
     radio_sawtooth = bk_radio_choice(45, radio_top + y_offset,
                                      radio_width, radio_height,
                                      "sawtooth");
     radio_square  = bk_radio_choice(140, radio_top + y_offset,
                                     radio_width, radio_height,
                                     "square");
+    radio_group->end();
+
 
     frequency = new Fl_Spinner(125, freq_top + y_offset, 60, freq_height,
             "Frequency ");
