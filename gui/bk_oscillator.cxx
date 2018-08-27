@@ -1,5 +1,6 @@
 #include "barkinator.hxx"
 #include "bk_oscillator.hxx"
+#include "../src/synth/synth.h"
 #include <iostream>
 
 Fl_Round_Button *bk_radio_choice(int x, int y, int w, int h,
@@ -26,8 +27,9 @@ Fl_Slider *bk_slider(int x, int y, int w, int h, const char *label,
 }
 
 
-BkOscillator::BkOscillator(int osc_number)
+BkOscillator::BkOscillator(int osc_number, Synth *synth)
 {
+    (void)synth;
     /* BEGIN: DIMENSIONS AND POSITIONS. */
     // NOTE: Positions are all relative to the group.
 

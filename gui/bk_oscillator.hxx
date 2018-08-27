@@ -6,6 +6,7 @@
 #include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Spinner.H>
 #include <FL/Fl_Slider.H>
+#include "../src/synth/synth.h"
 
 enum BkOscillatorType {
     BkSawtooth,
@@ -27,7 +28,7 @@ class BkOscillator {
         Fl_Slider *b;
         Fl_Slider *c;
 
-        BkOscillator(int osc_number);
+        BkOscillator(int osc_number, Synth *synth);
 };
 
 #endif

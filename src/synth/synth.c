@@ -27,6 +27,10 @@ Synth *synth_new(SynthOscillatorFn *oscillator, size_t frequency,
     synth_update(synth, oscillator, frequency, a, b, c);
     synth->enabled = false;
 
+    if (synth_register) {
+        synth_register(synth);
+    }
+
     return synth;
 }
 
@@ -55,6 +59,11 @@ void generate_chunk(int *buffer, uint32_t length)
             run_synth(synths[sidx], buffer, idx + sidx);
         }
     }
+}
+
+void synth_register_callback(SynthCreationCallback *fn)
+{
+    synth_register = fn;
 }
 
 bool synth_setup(int argc, char *argv[])
