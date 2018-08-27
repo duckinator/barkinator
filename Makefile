@@ -26,7 +26,8 @@ override LDFLAGS += -g --whole-archive \
 					${SDL2_LDFLAGS}
 
 CXXFLAGS := -std=c++11 -pedantic -Werror -Weverything \
-			-Wno-padded -Wno-c++98-compat-pedantic
+			-Wno-padded -Wno-c++98-compat-pedantic \
+			-Wno-missing-prototypes
 
 all: ${NAME}
 

@@ -2,6 +2,15 @@
 #include "bk_oscillator.hxx"
 #include <iostream>
 
+Fl_Round_Button *radio_button_choice(int x, int y, int w, int h,
+        const char *label)
+{
+    Fl_Round_Button *button = new Fl_Round_Button(x, y, w, h, label);
+    button->type(102);
+    button->down_box(FL_ROUND_DOWN_BOX);
+    return button;
+}
+
 BkOscillator::BkOscillator(int osc_number, const char *name)
 {
     /* BEGIN: DIMENSIONS AND POSITIONS. */
@@ -32,17 +41,12 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     group->labelfont(1);
 
     int radio_top = 40;
-    radio_sawtooth = new Fl_Round_Button(45, radio_top + y_offset,
+    radio_sawtooth = radio_button_choice(45, radio_top + y_offset,
                                          radio_width, radio_height,
                                          "sawtooth");
-    radio_sawtooth->type(102);
-    radio_sawtooth->down_box(FL_ROUND_DOWN_BOX);
-
-    radio_square = new Fl_Round_Button(140, radio_top + y_offset,
-                                       radio_width, radio_height,
-                                       "square");
-    radio_square->type(102);
-    radio_square->down_box(FL_ROUND_DOWN_BOX);
+    radio_square  = radio_button_choice(140, radio_top + y_offset,
+                                        radio_width, radio_height,
+                                        "square");
 
 //    int freq_top = radio_top + radio_height;
     frequency = new Fl_Spinner(125, 70 + y_offset, 60, 25, "Frequency ");
