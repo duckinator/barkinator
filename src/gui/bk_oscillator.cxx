@@ -1,6 +1,6 @@
 #include "barkinator.hxx"
 #include "bk_oscillator.hxx"
-#include "../src/synth/synth.h"
+#include "../synth/synth.h"
 #include <iostream>
 
 Fl_Round_Button *bk_radio_choice(int x, int y, int w, int h,
