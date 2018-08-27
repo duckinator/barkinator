@@ -1,11 +1,11 @@
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <error.h>
 #include "audio.h"
 
 #define FAIL(...) error(1, 0, __VA_ARGS__);
 
-void (*audio_generate_chunk)();
-SDL_AudioSpec wanted;
+static AudioGenChunkFn *audio_generate_chunk = NULL;
+static SDL_AudioSpec wanted;
 
 /*
  * Generate audio and shove it into the output stream.
@@ -16,6 +16,10 @@ SDL_AudioSpec wanted;
  */
 void fill_audio(void *udata, uint8_t *stream, int length)
 {
+    // We don't care about udata. I don't think.
+    // We certainly don't use it, anyway.
+    (void)udata;
+
     if (length < 0) {
         FAIL("fill_audio: ??? length < 0");
         return;
@@ -67,7 +71,7 @@ void audio_cleanup()
     SDL_CloseAudio();
 }
 
-bool audio_setup(void (*generate_chunk_)())
+bool audio_setup(AudioGenChunkFn *generate_chunk_)
 {
     atexit(audio_cleanup);
     audio_generate_chunk = generate_chunk_;

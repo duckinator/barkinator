@@ -3,7 +3,7 @@
 #include <stdlib.h> // for malloc()
 #include <string.h> // for memset()
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "oscillators.h"
 #include "audio.h"
 #include "synth.h"
@@ -57,6 +57,10 @@ void generate_chunk(int *buffer, uint32_t length)
 
 bool synth_setup(int argc, char *argv[])
 {
+    // We don't use argc or argv.
+    (void)argc;
+    (void)argv;
+
     synths[0] = synth_new(sawtooth, 30, 12, 3,  4);
     synths[1] = synth_new(square,   60, 10, 3, -2);
 

@@ -2,4 +2,7 @@ barkinator
 barkinator.exe
 *.wav
 *.ogg
+*.o
+*.a
+*.autosave
 /gui/build-barkinator-*
