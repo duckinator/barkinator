@@ -8,7 +8,7 @@
 
 Fl_Double_Window* make_window();
 
-#define BK_MAX_OSCILLATORS 2
+#define BK_MAX_OSCILLATORS 10
 
 class BarkinatorUI {
     public:
