@@ -1,7 +1,0 @@
-#!/bin/bash
-
-if [ -z "${WHALEDO_UID}" ]; then
-  WHALEDO_UID=$UID
-fi
-
-docker run --rm -it -v "$(pwd):/tmp/work" -w /tmp/work --env-file env.whaledo -u $WHALEDO_UID whaledo/sdl2-opengl3 make "$@"
