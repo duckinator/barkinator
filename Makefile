@@ -3,7 +3,7 @@ NAME := barkinator
 SYNTH_SRCFILES := src/synth/oscillators.c src/synth/audio.c src/synth/synth.c
 SYNTH_OBJFILES := $(patsubst %.c,%.o,${SYNTH_SRCFILES})
 
-GUI_SRCFILES := gui/barkinator.cxx
+GUI_SRCFILES := gui/barkinator.cxx gui/bk_oscillator.cxx
 GUI_OBJFILES := $(patsubst %.cxx,%.o,${SRCFILES})
 
 AR := ar
