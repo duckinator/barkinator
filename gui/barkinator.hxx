@@ -1,13 +1,18 @@
-#ifndef BARKINATOR_H
-#define BARKINATOR_H
+#ifndef BARKINATOR_HXX
+#define BARKINATOR_HXX
+
+#include "bk_oscillator.hxx"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Round_Button.H>
-#include <FL/Fl_Spinner.H>
-#include <FL/Fl_Slider.H>
 
-extern "C" { Fl_Double_Window* make_window(); }
+Fl_Double_Window* make_window();
+
+class BarkinatorUI {
+    public:
+        Fl_Double_Window *window;
+        BkOscillator *oscillators[2];
+        BarkinatorUI();
+};
 
 #endif

@@ -1,6 +1,12 @@
 #ifndef BK_OSCILLATOR_HXX
 #define BK_OSCILLATOR_HXX
 
+#include <FL/Fl.H>
+#include <FL/Fl_Group.H>
+#include <FL/Fl_Round_Button.H>
+#include <FL/Fl_Spinner.H>
+#include <FL/Fl_Slider.H>
+
 enum BkOscillatorType {
     BkSawtooth,
     BkSquare,
