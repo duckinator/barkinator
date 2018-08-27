@@ -93,4 +93,6 @@ BkOscillator::BkOscillator(int osc_number, Synth *synth)
             1 /* min */, 256 /* max */, 10 /* value */);
     c = bk_slider(60, c_top + y_offset, 256, 25, "C",
             1 /* min */, 256 /* max */, 10 /* value */);
+
+    group->end();
 }
