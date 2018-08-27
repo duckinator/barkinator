@@ -24,9 +24,8 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
 
     type = BkSawtooth;
 
-    int group_top  = padding;
-    int group_left = padding + y_offset;
-    group = new Fl_Group(group_left, group_top,
+    int group_top = padding;
+    group = new Fl_Group(padding, group_top + y_offset,
                          group_width, group_height,
                          name);
     group->box(FL_THIN_UP_BOX);
