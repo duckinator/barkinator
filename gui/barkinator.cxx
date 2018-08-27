@@ -21,10 +21,10 @@ class BkOscillator {
         Fl_Slider *b;
         Fl_Slider *c;
 
-        BkOscillator(int osc_number);
+        BkOscillator(int osc_number, const char *name);
 };
 
-BkOscillator::BkOscillator(int osc_number)
+BkOscillator::BkOscillator(int osc_number, const char *name)
 {
     if (osc_number < 1) {
         std::cerr << "BkOscillator() got an osc_number < 1." << std::endl;
@@ -34,8 +34,8 @@ BkOscillator::BkOscillator(int osc_number)
     int x_offset = (25 * osc_number) + (300 * (osc_number - 1));
 
     type    = BkSawtooth;
-    group   = new Fl_Group(x_offset, 25, 300, 200,
-                           "Oscillator N?");
+
+    group = new Fl_Group(x_offset, 25, 300, 200, name);
     group->box(FL_THIN_UP_BOX);
     group->labelfont(1);
 
@@ -78,8 +78,8 @@ BkOscillator::BkOscillator(int osc_number)
 Fl_Double_Window* make_window()
 {
     Fl_Double_Window* w = new Fl_Double_Window(350, 600, "Window");
-    BkOscillator *osc1 = new BkOscillator(1);
-    BkOscillator *osc2 = new BkOscillator(2);
+    BkOscillator *osc1 = new BkOscillator(1, "Oscillator #1");
+    BkOscillator *osc2 = new BkOscillator(2, "Oscillator #2");
 
     (void)osc1;
     (void)osc2;
