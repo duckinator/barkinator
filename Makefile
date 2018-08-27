@@ -22,8 +22,6 @@ override CCFLAGS += -std=c11 -pedantic-errors -gdwarf-2 \
 					-Wno-missing-prototypes -Wno-padded \
 					-Wno-error=conversion -Wno-error=cast-align # HACK
 #					-Wno-cast-qual -Wno-missing-prototypes -Wno-vla
-override LDFLAGS += -g --whole-archive \
-					${SDL2_LDFLAGS}
 
 CXXFLAGS := -std=c++11 -pedantic -Werror -Weverything \
 			-Wno-padded -Wno-c++98-compat-pedantic \
@@ -33,10 +31,10 @@ all: ${NAME}
 
 # ASSUMPTION: ${CC} can handle C++ files.
 ${NAME}: ${NAME}.a
-	${CC} ${CXXFLAGS} ${GUI_SRCFILES} $< -lstdc++ -lfltk -o $@
+	${CC} ${CXXFLAGS} ${SDL2_LDFLAGS} ${GUI_SRCFILES} $< -lstdc++ -lfltk -o $@
 
 ${NAME}.a: ${SYNTH_OBJFILES}
-	${AR} rcs $@ $<
+	${AR} rcs $@ $^
 
 %.o: %.c
 	${CC} ${CCFLAGS} -c $< -o $@
