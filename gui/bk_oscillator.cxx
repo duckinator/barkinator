@@ -31,15 +31,30 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     /* BEGIN: DIMENSIONS AND POSITIONS. */
     // NOTE: Positions are all relative to the group.
 
+    // Padding between elements.
     int padding = 25;
 
-    // Radio buttons themselves are squares.
-    // TODO: Figure out how labels fit into the width.
-    int radio_height = 25;
-    int radio_width  = radio_height;
+    // Generic element sizes.
+    int radio_height = 30;
+    int slider_height = 30;
+    int radio_width = 100;
+
+    // Top of oscillator type selectors.
+    int radio_top = 40;
+
+    // Top of frequency selector.
+    int freq_top = radio_top + radio_height + 10;
+
+    // Height of frequency selector
+    int freq_height = 30;
+
+
+    int a_top = freq_top + freq_height + 15;
+    int b_top = a_top + slider_height + 10;
+    int c_top = b_top + slider_height + 10;
 
     // group dimensions. TODO: Calculate these.
-    int group_height = 200;
+    int group_height = 220;
     int group_width  = 300;
 
     /* END:   DIMENSIONS AND POSITIONS. */
@@ -55,7 +70,6 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     group->box(FL_THIN_UP_BOX);
     group->labelfont(1);
 
-    int radio_top = 40;
     radio_sawtooth = bk_radio_choice(45, radio_top + y_offset,
                                      radio_width, radio_height,
                                      "sawtooth");
@@ -63,13 +77,14 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
                                     radio_width, radio_height,
                                     "square");
 
-    frequency = new Fl_Spinner(125, 70 + y_offset, 60, 25, "Frequency ");
+    frequency = new Fl_Spinner(125, freq_top + y_offset, 60, freq_height,
+            "Frequency ");
     frequency->value(30);
 
-    a = bk_slider(60, 110 + y_offset, 256, 25, "A",
+    a = bk_slider(60, a_top + y_offset, 256, 25, "A",
             1 /* min */, 256 /* max */, 10 /* value */);
-    b = bk_slider(60, 150 + y_offset, 256, 25, "B",
+    b = bk_slider(60, b_top + y_offset, 256, 25, "B",
             1 /* min */, 256 /* max */, 10 /* value */);
-    c = bk_slider(60, 190 + y_offset, 256, 25, "C",
+    c = bk_slider(60, c_top + y_offset, 256, 25, "C",
             1 /* min */, 256 /* max */, 10 /* value */);
 }
