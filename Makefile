@@ -3,8 +3,8 @@ NAME := barkinator
 SYNTH_SRCFILES := src/synth/oscillators.c src/synth/audio.c src/synth/synth.c
 SYNTH_OBJFILES := $(patsubst %.c,%.o,${SYNTH_SRCFILES})
 
-GUI_SRCFILES := src/main.c src/gui.c
-GUI_OBJFILES := $(patsubst %.c,%.o,${SRCFILES})
+GUI_SRCFILES := gui/barkinator.cxx
+GUI_OBJFILES := $(patsubst %.cxx,%.o,${SRCFILES})
 
 AR := ar
 CC := clang
@@ -25,7 +25,14 @@ override CCFLAGS += -std=c11 -pedantic-errors -gdwarf-2 \
 override LDFLAGS += -g --whole-archive \
 					${SDL2_LDFLAGS}
 
-all: ${NAME}.a
+CXXFLAGS := -std=c++11 -pedantic -Werror -Weverything \
+			-Wno-padded -Wno-c++98-compat-pedantic
+
+all: ${NAME}
+
+# ASSUMPTION: ${CC} can handle C++ files.
+${NAME}: ${NAME}.a
+	${CC} ${CXXFLAGS} ${GUI_SRCFILES} $< -lstdc++ -lfltk -o $@
 
 ${NAME}.a: ${SYNTH_OBJFILES}
 	${AR} rcs $@ $<
