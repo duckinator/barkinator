@@ -1,7 +1,6 @@
 #include "barkinator.hxx"
 #include "bk_oscillator.hxx"
 #include "../synth/synth.h"
-#include <iostream>
 #include <err.h>
 
 static BarkinatorUI *ui;
