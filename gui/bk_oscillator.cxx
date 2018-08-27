@@ -46,10 +46,10 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     radio_square->down_box(FL_ROUND_DOWN_BOX);
 
 //    int freq_top = radio_top + radio_height;
-    frequency = new Fl_Spinner(125, 70, 60, 25, "Frequency ");
+    frequency = new Fl_Spinner(125, 70 + y_offset, 60, 25, "Frequency ");
     frequency->value(30);
 
-    a = new Fl_Slider(60, 110, 256, 25, "A");
+    a = new Fl_Slider(60, 110 + y_offset, 256, 25, "A");
     a->type(1);
     a->minimum(1);
     a->maximum(256);
@@ -57,7 +57,7 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     a->value(10);
     a->align(Fl_Align(FL_ALIGN_LEFT));
 
-    b = new Fl_Slider(60, 150, 256, 25, "B");
+    b = new Fl_Slider(60, 150 + y_offset, 256, 25, "B");
     b->type(1);
     b->minimum(1);
     b->maximum(256);
@@ -65,7 +65,7 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     b->value(10);
     b->align(Fl_Align(FL_ALIGN_LEFT));
 
-    c = new Fl_Slider(60, 190, 256, 25, "C");
+    c = new Fl_Slider(60, 190 + y_offset, 256, 25, "C");
     c->type(1);
     c->minimum(1);
     c->maximum(256);
