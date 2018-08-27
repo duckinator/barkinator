@@ -53,8 +53,8 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     int b_top = a_top + slider_height + 10;
     int c_top = b_top + slider_height + 10;
 
-    // group dimensions. TODO: Calculate these.
-    int group_height = 220;
+    // group dimensions.
+    int group_height = c_top + slider_height;
     int group_width  = 300;
 
     /* END:   DIMENSIONS AND POSITIONS. */
