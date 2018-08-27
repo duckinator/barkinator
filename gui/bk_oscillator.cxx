@@ -48,7 +48,6 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
                                         radio_width, radio_height,
                                         "square");
 
-//    int freq_top = radio_top + radio_height;
     frequency = new Fl_Spinner(125, 70 + y_offset, 60, 25, "Frequency ");
     frequency->value(30);
 
