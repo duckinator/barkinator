@@ -19,7 +19,7 @@ SDL2_LDFLAGS += $(shell ${SDL2_CONFIG} --static-libs)
 override CCFLAGS += -std=c11 -pedantic-errors -gdwarf-2 \
 					-fdiagnostics-show-option -Werror -Weverything \
 					${SDL2_CCFLAGS} \
-					-Wno-error=missing-prototypes \
+					-Wno-missing-prototypes -Wno-padded \
 					-Wno-error=conversion -Wno-error=cast-align # HACK
 #					-Wno-cast-qual -Wno-missing-prototypes -Wno-vla
 override LDFLAGS += -g --whole-archive \
@@ -28,7 +28,7 @@ override LDFLAGS += -g --whole-archive \
 all: ${NAME}.a
 
 ${NAME}.a: ${SYNTH_OBJFILES}
-	${AR} rcs $@
+	${AR} rcs $@ $<
 
 %.o: %.c
 	${CC} ${CCFLAGS} -c $< -o $@

@@ -9,16 +9,17 @@
 #include "synth.h"
 
 // These are the actual synthesizers! The number is hard-coded, atm.
-Synth *synths[] = {
+static Synth *synths[] = {
     NULL,
     NULL,
     NULL, /* To terminate foreach(). */
 };
 
 // Magical variable used to generate audio.
-long i = 0;
+static long i = 0;
 
-Synth *synth_new(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c)
+Synth *synth_new(SynthOscillatorFn *oscillator, size_t frequency,
+                 int a, int b, int c)
 {
     Synth *synth = malloc(sizeof(Synth));
     memset(synth, 0, sizeof(Synth));
@@ -29,7 +30,8 @@ Synth *synth_new(uint8_t (*oscillator)(), size_t frequency, int a, int b, int c)
     return synth;
 }
 
-void synth_update(Synth *synth, uint8_t (*oscillator)(), size_t frequency, int a, int b, int c)
+void synth_update(Synth *synth, SynthOscillatorFn *oscillator,
+                  size_t frequency, int a, int b, int c)
 {
     synth->oscillator   = oscillator;
     synth->frequency    = frequency;
