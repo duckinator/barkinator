@@ -4,22 +4,48 @@
 
 BkOscillator::BkOscillator(int osc_number, const char *name)
 {
-    int x_offset = (25 * (osc_number + 1)) + (300 * osc_number);
+    /* BEGIN: DIMENSIONS AND POSITIONS. */
+    // NOTE: Positions are all relative to the group.
+
+    int padding = 25;
+
+    // Radio buttons themselves are squares.
+    // TODO: Figure out how labels fit into the width.
+    int radio_height = 25;
+    int radio_width  = radio_height;
+
+    // group dimensions. TODO: Calculate these.
+    int group_height = 200;
+    int group_width  = 300;
+
+    /* END:   DIMENSIONS AND POSITIONS. */
+
+    int y_offset = (padding * osc_number) + (group_height * osc_number);
 
     type = BkSawtooth;
 
-    group = new Fl_Group(x_offset, 25, 300, 200, name);
+    int group_top  = padding;
+    int group_left = padding + y_offset;
+    group = new Fl_Group(group_left, group_top,
+                         group_width, group_height,
+                         name);
     group->box(FL_THIN_UP_BOX);
     group->labelfont(1);
 
-    radio_sawtooth = new Fl_Round_Button(45, 40, 25, 25, "sawtooth");
+    int radio_top = 40;
+    radio_sawtooth = new Fl_Round_Button(45, radio_top + y_offset,
+                                         radio_width, radio_height,
+                                         "sawtooth");
     radio_sawtooth->type(102);
     radio_sawtooth->down_box(FL_ROUND_DOWN_BOX);
 
-    radio_square = new Fl_Round_Button(140, 40, 25, 25, "square");
+    radio_square = new Fl_Round_Button(140, radio_top + y_offset,
+                                       radio_width, radio_height,
+                                       "square");
     radio_square->type(102);
     radio_square->down_box(FL_ROUND_DOWN_BOX);
 
+//    int freq_top = radio_top + radio_height;
     frequency = new Fl_Spinner(125, 70, 60, 25, "Frequency ");
     frequency->value(30);
 
