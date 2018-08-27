@@ -26,7 +26,7 @@ Fl_Slider *bk_slider(int x, int y, int w, int h, const char *label,
 }
 
 
-BkOscillator::BkOscillator(int osc_number, const char *name)
+BkOscillator::BkOscillator(int osc_number)
 {
     /* BEGIN: DIMENSIONS AND POSITIONS. */
     // NOTE: Positions are all relative to the group.
@@ -64,6 +64,10 @@ BkOscillator::BkOscillator(int osc_number, const char *name)
     type = BkSawtooth;
 
     int group_top = padding;
+
+    // ASSUMPTION: not calling free() is okay because it's needed until exit.
+    char *name = reinterpret_cast<char*>(malloc(32));
+    snprintf(name, 32, "Oscillator #%i", osc_number + 1);
     group = new Fl_Group(padding, group_top + y_offset,
                          group_width, group_height,
                          name);

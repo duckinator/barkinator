@@ -27,7 +27,7 @@ class BkOscillator {
         Fl_Slider *b;
         Fl_Slider *c;
 
-        BkOscillator(int osc_number, const char *name);
+        BkOscillator(int osc_number);
 };
 
 #endif
