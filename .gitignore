@@ -2,3 +2,4 @@ barkinator
 barkinator.exe
 *.wav
 *.ogg
+/gui/build-barkinator-*
