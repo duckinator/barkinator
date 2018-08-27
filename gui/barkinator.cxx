@@ -86,16 +86,15 @@ Fl_Double_Window* make_window()
 
     w->end();
     //w->size_range(300, 300, 1000, 1000);
-    //w->end();
+    w->end();
 
     return w;
 }
 
 int main(int argc, char *argv[])
 {
-    (void)argc;
-    (void)argv;
-    make_window();
+    Fl_Double_Window *window = make_window();
+    window->show(argc, argv);
 
-    return 0;
+    return Fl::run();
 }
