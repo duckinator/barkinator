@@ -1,0 +1,41 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0304
+header_name {.h}
+code_name {.cxx}
+Function {make_window()} {open C
+} {
+  Fl_Window {} {
+    label Window open
+    xywh {400 103 350 595} type Double size_range {300 300 1000 1000} visible
+  } {
+    Fl_Group {} {
+      label {Oscillator 1} open
+      xywh {25 25 300 200} box THIN_UP_BOX labelfont 1
+    } {
+      Fl_Round_Button osc1_type_sawtooth {
+        label sawtooth
+        private xywh {45 40 25 25} type Radio down_box ROUND_DOWN_BOX
+      }
+      Fl_Round_Button osc1_type_square {
+        label square
+        private xywh {140 40 25 25} type Radio down_box ROUND_DOWN_BOX
+      }
+      Fl_Spinner {} {
+        label {Frequency }
+        private xywh {125 70 60 25} value 30
+      }
+      Fl_Slider osc1_inA {
+        label A
+        private xywh {60 110 256 25} type Horizontal align 4 minimum 1 maximum 256 step 1 value 10
+      }
+      Fl_Slider osc1_inB {
+        label B
+        private xywh {60 150 256 25} type Horizontal align 4 minimum 1 maximum 256 step 1 value 10
+      }
+      Fl_Slider osc1_inC {
+        label C selected
+        private xywh {60 190 256 25} type Horizontal align 4 minimum 1 maximum 256 step 1 value 10
+      }
+    }
+  }
+}
