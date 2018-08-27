@@ -4,8 +4,8 @@
 BarkinatorUI::BarkinatorUI()
 {
     window = new Fl_Double_Window(350, 600, "Window");
-    oscillators[0] = new BkOscillator(1, "Oscillator #1");
-    oscillators[1] = new BkOscillator(2, "Oscillator #2");
+    oscillators[0] = new BkOscillator(0, "Oscillator #1");
+    oscillators[1] = new BkOscillator(1, "Oscillator #2");
     window->end();
 }
 

@@ -4,12 +4,7 @@
 
 BkOscillator::BkOscillator(int osc_number, const char *name)
 {
-    if (osc_number < 1) {
-        std::cerr << "BkOscillator() got an osc_number < 1." << std::endl;
-        exit(1);
-    }
-
-    int x_offset = (25 * osc_number) + (300 * (osc_number - 1));
+    int x_offset = (25 * (osc_number + 1)) + (300 * osc_number);
 
     type = BkSawtooth;
 
