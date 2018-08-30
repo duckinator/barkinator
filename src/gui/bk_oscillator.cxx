@@ -108,11 +108,11 @@ BkOscillator::BkOscillator(int osc_number, Synth *synth_)
     frequency->value(30);
 
     a = bk_slider(60, a_top + y_offset, 256, 25, "A",
-            1 /* min */, 256 /* max */, 10 /* value */);
+            1 /* min */, 100 /* max */, synth->a /* value */);
     b = bk_slider(60, b_top + y_offset, 256, 25, "B",
-            1 /* min */, 256 /* max */, 10 /* value */);
+            1 /* min */, 100 /* max */, synth->b /* value */);
     c = bk_slider(60, c_top + y_offset, 256, 25, "C",
-            1 /* min */, 256 /* max */, 10 /* value */);
+            1 /* min */, 100 /* max */, synth->c /* value */);
 
     a->callback(&bk_osc_changed_a, this);
     a->when(FL_WHEN_CHANGED);

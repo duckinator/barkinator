@@ -1,5 +1,6 @@
 #include "barkinator.hxx"
 #include "bk_oscillator.hxx"
+#include "../synth/audio.h"
 #include "../synth/synth.h"
 #include <err.h>
 
@@ -32,6 +33,8 @@ int main(int argc, char *argv[])
     ui->window->end();
 
     ui->window->show(argc, argv);
+
+    audio_play();
 
     return Fl::run();
 }
