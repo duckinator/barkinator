@@ -26,9 +26,10 @@ Fl_Slider *bk_slider(int x, int y, int w, int h, const char *label,
 }
 
 
-BkOscillator::BkOscillator(int osc_number, Synth *synth)
+BkOscillator::BkOscillator(int osc_number, Synth *synth_)
 {
-    (void)synth;
+    synth = synth_;
+
     /* BEGIN: DIMENSIONS AND POSITIONS. */
     // NOTE: Positions are all relative to the group.
 

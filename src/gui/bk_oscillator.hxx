@@ -15,6 +15,8 @@ enum BkOscillatorType {
 
 class BkOscillator {
     public:
+        Synth *synth;
+
         BkOscillatorType type;
 
         Fl_Group *group;
@@ -28,7 +30,7 @@ class BkOscillator {
         Fl_Slider *b;
         Fl_Slider *c;
 
-        BkOscillator(int osc_number, Synth *synth);
+        BkOscillator(int osc_number, Synth *synth_);
 };
 
 #endif
