@@ -26,6 +26,19 @@ Fl_Slider *bk_slider(int x, int y, int w, int h, const char *label,
 }
 
 
+void bk_osc_changed_a(Fl_Widget*, void *data) {
+    BkOscillator *osc = reinterpret_cast<BkOscillator*>(data);
+    osc->synth->a = int(osc->a->value());
+}
+void bk_osc_changed_b(Fl_Widget*, void *data) {
+    BkOscillator *osc = reinterpret_cast<BkOscillator*>(data);
+    osc->synth->b = int(osc->b->value());
+}
+void bk_osc_changed_c(Fl_Widget*, void *data) {
+    BkOscillator *osc = reinterpret_cast<BkOscillator*>(data);
+    osc->synth->c = int(osc->c->value());
+}
+
 BkOscillator::BkOscillator(int osc_number, Synth *synth_)
 {
     synth = synth_;
@@ -100,6 +113,13 @@ BkOscillator::BkOscillator(int osc_number, Synth *synth_)
             1 /* min */, 256 /* max */, 10 /* value */);
     c = bk_slider(60, c_top + y_offset, 256, 25, "C",
             1 /* min */, 256 /* max */, 10 /* value */);
+
+    a->callback(&bk_osc_changed_a, this);
+    a->when(FL_WHEN_CHANGED);
+    b->callback(&bk_osc_changed_b, this);
+    b->when(FL_WHEN_CHANGED);
+    c->callback(&bk_osc_changed_c, this);
+    c->when(FL_WHEN_CHANGED);
 
     group->end();
 }
